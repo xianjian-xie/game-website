@@ -1,5 +1,5 @@
 # Module 2 Group Assignment
-
+![Home page](/mockup_1.PNG?raw=true)
 CSCI 5117, Spring 2021, [assignment description](https://canvas.umn.edu/courses/217951/pages/project-1)
 
 ## App Info:
@@ -55,7 +55,7 @@ In this space please either provide images (max 4) showing your prototypes, OR, 
 ![Signup page](/mockup_3.PNG?raw=true)
 ![Indiviual game review page](/mockup_4.PNG?raw=true)
 ![](https://media.giphy.com/media/26ufnwz3wDUli7GU0/giphy.gif)
-![Home page](/mockup_1.PNG?raw=true)
+
 
 
 ## External Dependencies
