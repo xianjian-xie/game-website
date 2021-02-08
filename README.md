@@ -55,6 +55,7 @@ In this space please either provide images (max 4) showing your prototypes, OR, 
 ![Signup page](/mockup_3.PNG?raw=true)
 ![Indiviual game review page](/mockup_4.PNG?raw=true)
 ![](https://media.giphy.com/media/26ufnwz3wDUli7GU0/giphy.gif)
+![Home page](/mockup_1.PNG?raw=true)
 
 
 ## External Dependencies
