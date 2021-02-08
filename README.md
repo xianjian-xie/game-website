@@ -4,14 +4,17 @@ CSCI 5117, Spring 2021, [assignment description](https://canvas.umn.edu/courses/
 
 ## App Info:
 
-* Team Name: TODO
-* App Name: TODO
+* Team Name: Dr Video Games
+* App Name: Movie Review
 * App Link: <https://TODO.heroku.com/>
 
 ### Students
 
-* First Last, x500@umn.edu
-* ...
+* Benjamin Chen, chen5713@umn.edu
+* Chen Hu, huxxx853@umn.edu
+* Qi Le, le000288@umn.edu
+* Xianjian Xie, xie00250@umn.edu
+* Yu Han, han00129@umn.edu
 
 
 ## Key Features
@@ -19,7 +22,9 @@ CSCI 5117, Spring 2021, [assignment description](https://canvas.umn.edu/courses/
 **Describe the most challenging features you implemented
 (one sentence per bullet, maximum 4 bullets):**
 
-* ...
+* Rich Text Review Editor
+* Rich Text Game Wiki Editor
+* Recommender System
 
 ## Testing Notes
 
@@ -43,6 +48,8 @@ There are a few tools for mock-ups. Paper prototypes (low-tech, but effective an
 In this space please either provide images (max 4) showing your prototypes, OR, a link to an online hosted mock-up tool like moqups.com
 
 **[Add images/photos that show your paper prototype (maximum 4)](https://stackoverflow.com/questions/10189356/how-to-add-screenshot-to-readmes-in-github-repository) along with a very brief caption:**
+
+https://drive.google.com/file/d/1KR4iHQXlJL6Fg5VEvuwFZfoSptkEZ1AW/view?usp=sharing
 
 ![](https://media.giphy.com/media/26ufnwz3wDUli7GU0/giphy.gif)
 
