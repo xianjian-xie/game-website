@@ -1,5 +1,5 @@
 # Module 2 Group Assignment
-![Home page](/mockup_1.PNG?raw=true)
+
 CSCI 5117, Spring 2021, [assignment description](https://canvas.umn.edu/courses/217951/pages/project-1)
 
 ## App Info:
