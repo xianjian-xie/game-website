@@ -49,7 +49,7 @@ In this space please either provide images (max 4) showing your prototypes, OR, 
 
 **[Add images/photos that show your paper prototype (maximum 4)](https://stackoverflow.com/questions/10189356/how-to-add-screenshot-to-readmes-in-github-repository) along with a very brief caption:**
 
-https://drive.google.com/file/d/1KR4iHQXlJL6Fg5VEvuwFZfoSptkEZ1AW/view?usp=sharing
+
 ![Home page](/mockup_1.PNG?raw=true)
 ![Signin page](/mockup_2.PNG?raw=true)
 ![Signup page](/mockup_3.PNG?raw=true)
