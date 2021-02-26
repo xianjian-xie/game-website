@@ -1,0 +1,37 @@
+{% extends "parent.html" %}
+{% block title %}Images{% endblock %}
+{% block content %}
+
+{% if status %}
+    <div id="alert">
+      {{ status }}
+    </div>
+{% endif %}
+
+<div class="imageGallery pure-g">
+  {% for id in imageIds %}
+    <img class="pure-u-1-6 image" src="{{url_for("view_image", img_id=id)}}"/>
+  
+  {% endfor %}
+</div>
+
+{% if page >0 %}
+<a href="{{url_for("image_gallery", page=page-1)}}">Previous Page</a>
+{% endif %}
+{% if page < max_page %}
+<a href="{{url_for("image_gallery", page=page+1)}}">Next Page</a>
+{% endif %}
+
+{% if session.profile %}
+<h2>add Your own</h2> 
+<form class="pure-form" method="post" enctype="multipart/form-data" action="{{url_for("upload_image")}}">
+  <fieldset>
+      <input type="file" name="image" accept="image/jpeg,image/png,image/gif" />
+      <button type="submit" class="pure-button pure-button-primary">Submit</button>
+  </fieldset>
+</form>
+{% endif %}
+
+{% endblock %}
+
+

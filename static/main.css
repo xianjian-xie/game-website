@@ -1,0 +1,12 @@
+body #menu {
+    border-bottom: 2px olive solid;
+    background-color: rgba(128, 128, 0, 0.25);
+}
+
+body div#content {
+    padding:1em;
+}
+
+body div.imageGallery  img {
+  
+}
