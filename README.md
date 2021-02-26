@@ -50,10 +50,10 @@ In this space please either provide images (max 4) showing your prototypes, OR, 
 **[Add images/photos that show your paper prototype (maximum 4)](https://stackoverflow.com/questions/10189356/how-to-add-screenshot-to-readmes-in-github-repository) along with a very brief caption:**
 
 
-![Home page](/mockup_1.PNG?raw=true)
-![Signin page](/mockup_2.PNG?raw=true)
-![Signup page](/mockup_3.PNG?raw=true)
-![Indiviual game review page](/mockup_4.PNG?raw=true)
+![Home page](/mockup/mockup_1.PNG?raw=true)
+![Signin page](/mockup/mockup_2.PNG?raw=true)
+![Signup page](/mockup/mockup_3.PNG?raw=true)
+![Indiviual game review page](/mockup/mockup_4.PNG?raw=true)
 ![](https://media.giphy.com/media/26ufnwz3wDUli7GU0/giphy.gif)
 
 
