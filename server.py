@@ -62,10 +62,10 @@ def view_image(img_id):
     with db.get_db_cursor() as cur:
         cur.execute("SELECT * FROM images where image_id=%s", (img_id,))
         image_row = cur.fetchone() # just another way to interact with cursors
-         
+
         # in memory pyhton IO stream
         stream = io.BytesIO(image_row["data"])
-         
+
         # use special "send_file" function
         return send_file(stream, attachment_filename=image_row["filename"])
 
@@ -91,7 +91,7 @@ def upload_image():
         with db.get_db_cursor(True) as cur:
             cur.execute("insert into images (filename, data) values (%s, %s)", (filename, data))
     return redirect(url_for("image_gallery", status="Image Uploaded Succesfully"))
-        
+
 def try_parse_int(s, base=10, default=None):
     """Parse an integer with a default"""
     try:
@@ -157,7 +157,7 @@ def new_person():
         name = request.form.get("name", "unnamed friend")
         app.logger.info("Adding person %s", name)
         cur.execute("INSERT INTO person (name) values (%s)", (name,))
-        
+
         return redirect(url_for('people'))
 
 
@@ -177,5 +177,3 @@ def edit_person(id):
     with db.get_db_cursor(True) as cur:
         cur.execute("UPDATE person set description = %s where person_id = %s;", (description, id))
         return redirect(url_for("get_person", id=id))
-
-
