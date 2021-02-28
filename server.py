@@ -49,9 +49,10 @@ def game(name):
     with db.get_db_cursor() as cur:
 
         #first find if game exits in our database and extract game data
-        cur.execute("SELECT picture, video, rating, description, platform from game where name = %s;", (name,))
-        app.logger.info("game name %s",name)
+        cur.execute("SELECT picture_link, video, rating, description, platform from game where name = %s;", (name,))
+        #app.logger.info("game name %s",name)
         game = [record for record in cur]
+        #app.logger.info("picture is %s",game[0][0])
         if(len(game) == 0):
             return abort(404)
         else:
@@ -80,9 +81,10 @@ def list_game(name):
     with db.get_db_cursor() as cur:
 
         #first find if game exits in our database and extract game data
-        cur.execute("SELECT picture, video, rating, description, platform from game where name = %s;", (name,))
         app.logger.info("game name %s",name)
+        cur.execute("SELECT picture_link, video, rating, description, platform from game where name = %s;", (name,))
         game = [record for record in cur]
+        #app.logger.info("picture is %s",game[0][0])
         if(len(game) == 0):
             return abort(404)
         else:
@@ -105,7 +107,7 @@ def list_game(name):
 #fuzzy search not implemented, may need further implementation (might have question here)
 @app.route('/search', methods=['GET'])
 def search():
-    app.logger.info("In search")
+    #app.logger.info("In search")
     name = request.args.get("name")
     app.logger.info("Search for game %s", name)
 

@@ -44,10 +44,10 @@
 			<div class="resultB">
 				<ul class="resultB-ul">
 					<li class="resultB-li">
-						<div class="resultB-img"><img src="/static/images/result01.jpg"></div>
+						<div class="resultB-img"><img src={{picture}}></div>
 						<div class="resultB-content">
-							<h3> <a href="{{ url_for("game", name="DOTA") }}"> Spintires®: The Original Game </a> </h3>
-							<h5 class="evaluateB-li-l-desc resultB-li-l-desc">Spintere is Intel's award-winning off-road driving experience designed to challenge players' driving skills and endurance.<br>Responsible for the operation of large all terrain Soviet vehicles and adventure across rugged landscapes, only maps and compass to guide you. </h5>
+							<h3> <a href="{{ url_for("game", name=name) }}"> {{name}} </a> </h3>
+							<h5 class="evaluateB-li-l-desc resultB-li-l-desc"> {{desciption}} </h5>
 							<p class="infoB">
 								<span class="message">2536</span>
 								<span class="give">620</span>
