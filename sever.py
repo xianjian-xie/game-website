@@ -57,7 +57,7 @@ def game(name):
         else:
             #select game tag
             cur.execute("SELECT tag, count from game_tag where game = %s",(name,))
-            tag = [record[0] for record in cur]
+            tag = [record for record in cur]
 
             #may need to consider here is there is no tag
 
@@ -119,8 +119,7 @@ def new_review(name):
         content = request.form.get("content")
         rating = request.form.get("rating")
 
-        # 没有game
-        app.logger.info("Insert review in database %s %s %s %s %s", reviewer,game,title,content,rating)
+        app.logger.info("Insert review in database %s %s %s %s %s", reviewer,name,title,content,rating)
         cur.execute("INSERT INTO review (reviewer,game,title,content,rating) values (%s,%s,%s,%s,%s)", (reviewer,name,title,content,rating,))#if I do not put time, if would default put a timestamp
 
         #update game_tag table, this might need to be changed, assume what form give is a string list
@@ -143,8 +142,8 @@ def new_review(name):
         #update overall rating in game table
         if rating != None:
             cur.execute("SELECT rating, review_number from game where name = %s",(name,))
-            overall_rating = [record[0] for record in cur]
-            review_number = [record[1] for record in cur]
+            overall_rating = [record[0] for record in cur]#[0]
+            review_number = [record[1] for record in cur]#[0]
             overall_rating = (overall_rating*review_number + rating)/(review_number+1)
             cur.excute("UPDATE game set rating = %s, review_number = %s where name = %s",(overall_rating,review_number+1,name,))
 
