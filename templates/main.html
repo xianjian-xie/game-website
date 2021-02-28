@@ -18,13 +18,14 @@
 </div>
 
 <div class="mainB">
-
+<form class="pure-form pure-form-stacked" action="{{ url_for("search") }}" method="GET">
 	<div class="searchB">
 		<div class="searchB-inp-wrap">
 			<div class="inpB">
-				<input type="text" name="search" class="inp" placeholder="What Game Are you looking for">
+				<input type="text" name="name" class="inp" placeholder="What Game Are you looking for">
 			</div>
-			<a href="javascript:;" class="btn-search">search</a>
+			<!-- <a href="javascript:;" class="btn-search">search</a> -->
+			<button type="submit" class="pure-button pure-button-primary">search</button>
 		</div>
 		<div class="hotB">
 			<p>Hot Search: </p>
@@ -36,52 +37,103 @@
 			</ul>
 		</div>
 	</div>
+</form>
 
-	<div class="result-title"><p>57 <span>relevant search result</span></p></div>
+	<div class="hotB hotB-ps">
+		<p>Most Recently Reviewed Games</p>
+	</div>
 
 	<div class="listB">
-		<div class="list-l result-l">
-			<div class="resultB">
-				<ul class="resultB-ul">
-					<li class="resultB-li">
-						<div class="resultB-img"><img src="/static/images/result01.jpg"></div>
-						<div class="resultB-content">
-							<h3> <a href="{{ url_for("game", name="DOTA") }}"> Spintires®: The Original Game </a> </h3>
-							<h5 class="evaluateB-li-l-desc resultB-li-l-desc">Spintere is Intel's award-winning off-road driving experience designed to challenge players' driving skills and endurance.<br>Responsible for the operation of large all terrain Soviet vehicles and adventure across rugged landscapes, only maps and compass to guide you. </h5>
-							<p class="infoB">
-								<span class="message">2536</span>
-								<span class="give">620</span>
-							</p>
+		<div class="list-l list-common">
+			<div class="evaluateB">
+				<ul class="evaluateB-ul">
+					<li class="evaluateB-li">
+						<div class="evaluateB-li-l">
+							<h3 class="evaluateB-li-l-title">Fall Guys: Ultimate Knockout</h3>
+							<h5 class="evaluateB-li-l-desc">I had just reached level four, but I had discovered the possibility of the game. If you join creative workshop to write your own scripts, to voice, I believe this game can bring us more surprises.</h5>
+							<div class="evaluateB-li-l-user">
+								<i><img src="/static/images/tx01.jpg"></i>
+								<p>Chen Hu</p>
+							</div>
+						</div>
+						<div class="evaluateB-star-r">
+							<p>02/06/2021</p>
+							<div class="evaluateB-star-list">
+								<span class="light-star"></span>
+					            <span></span>
+					            <span></span>
+					            <span></span>
+					            <span></span>
+							</div>
 						</div>
 					</li>
-					<li class="resultB-li">
-						<div class="resultB-img"><img src="/static/images/result02.jpg"></div>
-						<div class="resultB-content">
-							<h3 class="evaluateB-li-l-title">Spintires®: The Original Game</h3>
-							<h5 class="evaluateB-li-l-desc resultB-li-l-desc">Spintere is Intel's award-winning off-road driving experience designed to challenge players' driving skills and endurance.<br>Responsible for the operation of large all terrain Soviet vehicles and adventure across rugged landscapes, only maps and compass to guide you. </h5>
-							<p class="infoB">
-								<span class="message">2536</span>
-								<span class="give">620</span>
-							</p>
+					<li class="evaluateB-li">
+						<div class="evaluateB-li-l">
+							<h3 class="evaluateB-li-l-title">Fall Guys: Ultimate Knockout</h3>
+							<h5 class="evaluateB-li-l-desc">I had just reached level four, but I had discovered the possibility of the game. If you join creative workshop to write your own scripts, to voice, I believe this game can bring us more surprises.</h5>
+							<div class="evaluateB-li-l-user">
+								<i><img src="/static/images/tx02.jpg"></i>
+								<p>Qi Le</p>
+							</div>
+						</div>
+						<div class="evaluateB-star-r">
+							<p>02/06/2021</p>
+							<div class="evaluateB-star-list">
+								<span class="light-star"></span>
+					            <span class="light-star"></span>
+					            <span class="light-star"></span>
+					            <span></span>
+					            <span></span>
+							</div>
 						</div>
 					</li>
-					<li class="resultB-li">
-						<div class="resultB-img"><img src="/static/images/result03.jpg"></div>
-						<div class="resultB-content">
-							<h3 class="evaluateB-li-l-title">Spintires®: The Original Game</h3>
-							<h5 class="evaluateB-li-l-desc resultB-li-l-desc">Spintere is Intel's award-winning off-road driving experience designed to challenge players' driving skills and endurance.<br>Responsible for the operation of large all terrain Soviet vehicles and adventure across rugged landscapes, only maps and compass to guide you. </h5>
-							<p class="infoB">
-								<span class="message">2536</span>
-								<span class="give">620</span>
-							</p>
+					<li class="evaluateB-li">
+						<div class="evaluateB-li-l">
+							<h3 class="evaluateB-li-l-title">Fall Guys: Ultimate Knockout</h3>
+							<h5 class="evaluateB-li-l-desc">I had just reached level four, but I had discovered the possibility of the game. If you join creative workshop to write your own scripts, to voice, I believe this game can bring us more surprises.</h5>
+							<div class="evaluateB-li-l-user">
+								<i><img src="/static/images/tx03.jpg"></i>
+								<p>Xianjian Xie</p>
+							</div>
+						</div>
+						<div class="evaluateB-star-r">
+							<p>02/06/2021</p>
+							<div class="evaluateB-star-list">
+								<span class="light-star"></span>
+					            <span class="light-star"></span>
+					            <span class="light-star"></span>
+					            <span class="light-star"></span>
+					            <span></span>
+							</div>
+						</div>
+					</li>
+					<li class="evaluateB-li">
+						<div class="evaluateB-li-l">
+							<h3 class="evaluateB-li-l-title">Fall Guys: Ultimate Knockout</h3>
+							<h5 class="evaluateB-li-l-desc">I had just reached level four, but I had discovered the possibility of the game. If you join creative workshop to write your own scripts, to voice, I believe this game can bring us more surprises.</h5>
+							<div class="evaluateB-li-l-user">
+								<i><img src="/static/images/tx04.jpg"></i>
+								<p>Benjamin Chen</p>
+							</div>
+						</div>
+						<div class="evaluateB-star-r">
+							<p>02/06/2021</p>
+							<div class="evaluateB-star-list">
+								<span class="light-star"></span>
+					            <span class="light-star"></span>
+					            <span class="light-star"></span>
+					            <span></span>
+					            <span></span>
+							</div>
 						</div>
 					</li>
 				</ul>
 			</div>
+			<a href="javascript:;" class="more">See more ></a>
 		</div>
 
 		<div class="list-r list-common">
-			<h2 class="title">Ranking（with sort）<span class="sort">sort</span></h2>
+			<h2 class="title">Ranking<span class="sort">sort</span></h2>
 			<div class="recommendB">
 				<ul class="recommendB-ul">
 					<li class="recommendB-li">
@@ -158,18 +210,11 @@
 	$(function(){
 		$('.mainB').css({'padding-top':parseFloat($('.header').height())});
 
-		var resultBH = $('.resultB').outerHeight();
-		$('.result-l').height(resultBH);
 		/*$(".evaluate-box-starB span").click(function() {
             $(this).addClass("light-star");
             $(this).prevAll().addClass("light-star");
             $(this).nextAll().removeClass("light-star");
         });*/
-
-        $('.give').click(function(){
-        	$(this).html();
-        	console.log($(this).html());
-        })
 	})
 </script>
 

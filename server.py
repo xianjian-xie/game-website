@@ -41,7 +41,7 @@ def home():
         if (len(reviews) > k):
             reviews = reviews[:k]
 
-    return render_template('result.html', game_list=game_list,reviews=reviews)
+    return render_template('main.html', game_list=game_list,reviews=reviews)
 
 
 @app.route('/<string:name>', methods=['GET'])
@@ -50,6 +50,7 @@ def game(name):
 
         #first find if game exits in our database and extract game data
         cur.execute("SELECT picture, video, rating, description, platform from game where name = %s;", (name,))
+        app.logger.info("game name %s",name)
         game = [record for record in cur]
         if(len(game) == 0):
             return abort(404)
@@ -74,21 +75,45 @@ def game(name):
             #return render_template("game.html", name=name, picture=game[0][0], video_link= game[0][1],overall_rating=game[0][2],desciption=game[0][3],platform=game[0][4], \
             #tag=tag,reviewer=review[0],title=review[1],content=review[2],review_rating=review[3])
 
+@app.route('/search/<string:name>', methods=['GET'])
+def list_game(name):
+    with db.get_db_cursor() as cur:
+
+        #first find if game exits in our database and extract game data
+        cur.execute("SELECT picture, video, rating, description, platform from game where name = %s;", (name,))
+        app.logger.info("game name %s",name)
+        game = [record for record in cur]
+        if(len(game) == 0):
+            return abort(404)
+        else:
+            #select game tag
+            cur.execute("SELECT tag, count from game_tag where game = %s",(name,))
+            tag = [record for record in cur]
+
+            #may need to consider here is there is no tag
+
+            #tag is a nested list with count in tag[][1],reviews is a nest list with k reviews
+            return render_template("search.html", name=name, picture=game[0][0], video_link= game[0][1],overall_rating=game[0][2],desciption=game[0][3],platform=game[0][4], \
+            tag=tag)
+
+
+
 
 ###put search, sort and submit review function here:
 
 #search: input:game name, output:game page
 #fuzzy search not implemented, may need further implementation (might have question here)
-@app.route('/<string:name>', methods=['GET'])
+@app.route('/search', methods=['GET'])
 def search():
+    app.logger.info("In search")
     name = request.args.get("name")
     app.logger.info("Search for game %s", name)
 
-    return redirect(url_for("game",name = name))
+    return redirect(url_for("list_game",name=name))
 
 
 #sort: input:sort method, output:a list of top 10 games
-@app.route('/', methods=['GET'])
+@app.route('/sort', methods=['GET'])
 def sort():
     sort_method = request.args.get("method")
     app.logger.info("Sort by method %s", method)
