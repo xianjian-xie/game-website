@@ -1,54 +1,102 @@
 <!doctype html>
-
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A layout example that shows off a responsive photo gallery.">
+    <title>Photo Gallery &ndash; Layout Examples &ndash; Pure</title>
+    <link rel="stylesheet" href="/static/pure-min.css">
+    <link rel="stylesheet" href="/static/grids-responsive-min.css">
+    <link rel="stylesheet" href="/static/styles.css">
 
-  <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.5/build/pure-min.css" integrity="sha384-LTIDeidl25h2dPxrB2Ekgc9c7sEC3CWGM6HeFmuDNUjX76Ert4Z4IY714dhZHPLd" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.5/build/grids-responsive-min.css" />
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="//cdn.quilljs.com/1.3.6/quill.min.js"></script>
+  </head>
 
-  <link rel="stylesheet" href="/static/main.css">
+  <body>
+    <div>
+      <div class="header">
+          <div class="pure-menu pure-menu-horizontal">
+              <a class="pure-menu-heading" href="">Dr. Video Games</a>
   
-  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-  <script src="//cdn.quilljs.com/1.3.6/quill.js"></script>
+              <ul class="pure-menu-list">
+                  <li class="pure-menu-item pure-menu-selected"><a href="#" class="pure-menu-link">Home</a></li>
+                  <li class="pure-menu-item"><a href="#" class="pure-menu-link">Blog</a></li>
+                  <li class="pure-menu-item"><a href="#" class="pure-menu-link">About</a></li>
+              </ul>
+          </div>
+      </div>
+  
+      <div class="pure-g">
+        <div class="photo-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-2">
+          <img src="https://wallpapercave.com/wp/p8fmFoP.jpg"
+               alt="dota2">
+        </div>
+  
+        <div class="photo-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-2">
+          <img src="https://wallpapercave.com/wp/wp2698473.jpg"
+               alt="dota2">
+        </div>
+  
+  
+  
+        <div class="text-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-1">
+          <div class="l-box">
+              <h1 class="text-box-head">Game Discription</h1>
+              <p class="text-box-subhead">Dota 2 is a multiplayer online battle arena (MOBA) video game 
+                in which two teams of five players compete to collectively destroy a large structure 
+                defended by the opposing team known as the "Ancient", whilst defending their own.</p>
+          </div>
+        </div>
 
-  <title> {% block title %}{% endblock %} | csc5117-gift tool</title>
-</head>
-<body>
-  <div id="menu">
-    <div class="pure-menu">
-      <a href="#" class="pure-menu-heading pure-menu-link">csc5117-gift tool</a>
-        <ul class="pure-menu-horizontal">
-          <li class="pure-menu-item">
-            <a href="{{ url_for("home") }}" class="pure-menu-link">Home</a>
-          </li>
-          <li class="pure-menu-item">
-            <a href="{{ url_for("people") }}" class="pure-menu-link">People</a>
-          </li>
-          <li class="pure-menu-item">
-            <a href="{{ url_for("api_foo") }}" class="pure-menu-link">API test</a>
-          </li>
-          <li class="pure-menu-item">
-            <a href="{{ url_for("image_gallery") }}" class="pure-menu-link">Images</a>
-          </li>
-          {% if session.profile %}
+        <div class="text-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-1">
+          <div class="l-box">
+            <h1 class="text-box-head">Reviews</h1>
+            <div>
+              <div class="one-line">
+                <div class="review-title">
+                  <p>review title</p>
+                </div>
+                <div class="review content">
+                  <p> review content</p>
+                </div>
+              </div>
+              <div class="one-line">
+                <div class="reviewer">
+                  <p>reviewer</p>
+                </div>
+                <div class="rating">
+                  <p>rating</p>
+                </div>
+              </div><br>
+            </div> 
+          </div>
+        </div>
 
-          <li class="pure-menu-item">
-            <a href="{{ url_for("logout") }}" class="pure-menu-link">Logout</a>
-          </li>
-          {% else %}
-          <li class="pure-menu-item">
-            <a href="{{ url_for("login") }}" class="pure-menu-link">Login</a>
-          </li>
-          {% endif %}
-        </ul>
+        <div class="text-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-1">
+          <div class="l-box">
+            <div id="editor"></div>
+            <form class="pure-form">
+              <button type="submit" class="pure-button">Submit</button>
+            </form>
+          </div>
+        </div>
+        
+        
+        
+        
+        <script>
+          var quill = new Quill('#editor', {
+            theme: 'snow'
+            
+          });
+        </script>
+
+
+          
+  
+          
+      </div>    
     </div>
-  </div>
-
-  <div id="content">
-    {% block content %}
-    {% endblock %}
-  </div>
-</div>
+  </body>
 </html>
