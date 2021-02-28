@@ -19,7 +19,6 @@ def initialize():
     auth0_setup()
 
 
-
 ### AUTH:
 @app.route('/login')
 def login():
