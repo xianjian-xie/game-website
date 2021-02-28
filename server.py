@@ -25,24 +25,23 @@ def error404(error):
 
 ###put render main and review page function here:
 @app.route('/', methods=['GET'])
-def home(game_list):
+def home():
     with db.get_db_cursor() as cur:
         #may need a  game_list, set default as rating
-        if game_list == NULL:
-            cur.execure("SELECT name from game ordered by rating DESC")
-            game_list = [record[0] for record in cur]
-            if (len(game_list) > 10):
-                game_list = game_list[:10]
+        cur.execute("SELECT name from game order by rating DESC")
+        game_list = [record[0] for record in cur]
+        if (len(game_list) > 10):
+            game_list = game_list[:10]
 
 
         #select the most recent k reviews
         k=5
-        cur.execure("SELECT reviewer,timestamp,game,title,content,rating from review ordered by timestamp DESC")
+        cur.execute("SELECT reviewer,timestamp,game,title,content,rating from review order by timestamp DESC")
         reviews = [record for record in cur]
         if (len(reviews) > k):
             reviews = reviews[:k]
 
-    return render_template('main.html', game_list=game_list,reviews=reviews)
+    return render_template('result.html', game_list=game_list,reviews=reviews)
 
 
 @app.route('/<string:name>', methods=['GET'])
@@ -63,7 +62,7 @@ def game(name):
 
             #select the most recent k reviews for the game
             k=2
-            cur.execure("SELECT reviewer,timestamp,title,content,rating from review where game = %s ordered by timestamp DESC",(name,))
+            cur.execute("SELECT reviewer,timestamp,title,content,rating from review where game = %s order by timestamp DESC",(name,))
             reviews = [record for record in cur]
             if (len(reviews) > k):
                 reviews = reviews[:k]
@@ -96,20 +95,21 @@ def sort():
     game_list = []
     with db.get_db_cursor() as cur:
         if sort_method == "rating":
-            cur.execure("SELECT name from game ordered by rating DESC")
+            cur.execute("SELECT name from game order by rating DESC")
             game_list = [record[0] for record in cur]
         elif sort_method == "popularity":
-            cur.execure("SELECT name from game ordered by popularity DESC")
+            cur.execute("SELECT name from game order by popularity DESC")
             game_list = [record[0] for record in cur]
 
     if (len(game_list) > 10):
         game_list = game_list[:10]
 
-    return redirect(url_for("home", game_list=game_list))
+    return render_template('main.html', game_list=game_list)
+    #redirect(url_for("home", game_list=game_list))
 
 
 #new review:input-review, return to game page
-@app.rount('/<string:name>',method=['POST'])
+@app.route('/<string:name>',methods=['POST'])
 def new_review(name):
     with db.get_db_cursor() as cur:
 
