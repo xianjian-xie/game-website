@@ -5,26 +5,54 @@ body {
 h1,h2,h3,h4,h5,h6 {
     color: #111;
 }
-.one-line {
-    float: left;
-    width: 300px;
-    height: auto;
-    border: 2px solid #000000;
+
+.review-area {
+    max-height: 500px;
+    overflow: auto;
+
 }
+
+.review-box {
+    display: flex;
+    margin-bottom: 50px;
+}
+
+.left-box {
+    float: left;
+    width: 500px;
+    height: auto;
+    border: 1px solid #000000;
+}
+
+.right-box {
+    float: left;
+    width: 200px;
+    height: auto;
+    border: 1px solid #000000;
+}
+
 .review-title{
     text-align: left;
 }
 
+.review-title h3{
+   color: rgb(255, 190, 94)
+}
+
 .reviewer{
-    text-align: right;
+    text-align: left;
 }
 
 .review-content{
     text-align: left;
 }
 
+.review-content h5{
+    color:rgb(255, 190, 94);
+}
+
 .rating{
-    text-align: right;
+    text-align: left;
 }
 
 

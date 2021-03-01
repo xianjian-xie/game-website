@@ -64,8 +64,10 @@ def game(name):
 
             #select the most recent k reviews for the game
             k=2
-            cur.execute("SELECT reviewer,timestamp,title,content,rating from review where game = %s order by timestamp DESC",(name,))
+            cur.execute("SELECT reviewer,timestamp,title,content,rating,oauth_id from review, reviewer where game = %s and review.reviewer=reviewer.id order by timestamp DESC",(name,))
             reviews = [record for record in cur]
+
+            
             if (len(reviews) > k):
                 reviews = reviews[:k]
 
