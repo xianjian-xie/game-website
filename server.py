@@ -24,7 +24,39 @@ def initialize():
 def error404(error):
     return "oh no. you killed it."
 
-### put AUTH function here:
+### AUTH:
+@app.route('/login')
+def login():
+    if 'profile' in session:
+        return redirect(url_for('test_auth'))
+    else:
+        return auth0().authorize_redirect(redirect_uri=url_for('callback', _external=True))
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    params = { 'returnTo': url_for('home', _external=True), 'client_id': os.environ['AUTH0_CLIENT_ID'] }
+    return redirect(auth0().api_base_url + '/v2/logout?' + urlencode(params))
+
+@app.route('/callback')
+def callback():
+    auth0().authorize_access_token()
+    resp = auth0().get('userinfo')
+    userinfo = resp.json()
+
+    session['jwt_payload'] = userinfo
+    session['profile'] = {
+        'user_id': userinfo['sub'],
+        'name': userinfo['name'],
+        'picture': userinfo['picture']
+    }
+
+    return redirect('/test_auth')
+
+@app.route('/test_auth')
+@require_auth
+def test_auth():
+    return render_template("test_auth.html", profile=session['profile'])
 
 ###put render main and review page function here:
 @app.route('/', methods=['GET'])
