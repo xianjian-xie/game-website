@@ -1,8 +1,8 @@
-{% extends "parent.html" %}
-{% block title %}Consent Form{% endblock %}
+<!doctype html>
 
-{% block content %}
+<html lang="en">
 
+<body>
 <h3> Authentication test! </h3>
 <div> Welcome, {{ profile.name }}!</div>
 <div> Profile: <br /> {{ profile }} </div>
@@ -14,5 +14,5 @@
 <div>
     <a class="pure-button pure-button-primary" href="{{ url_for('logout') }}"> Logout </a>
 </div>
-
-{% endblock %}
+</body>
+</html>
