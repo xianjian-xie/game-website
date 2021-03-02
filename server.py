@@ -83,13 +83,20 @@ def home():
         for i in trie_game_list:
             trie.insert(i)
 
-        #接到请求的处理，需要改
-        keyword = request.args.get("key")
-        trie = request.args.get("trie")
-        if keyword is not None and keyword != "":
-            returnlist = trie.getData()
+    
+        redirect(url_for('home_trie_search',game_list=game_list,reviews=reviews, trie = trie))
+    
 
-    return render_template('main.html', game_list=game_list,reviews=reviews)
+@app.route('/trie', methods=['GET'])
+def home_trie_search():
+
+    #接到请求的处理，需要改
+    keyword = request.args.get("key")
+    trie = request.args.get("trie")
+    if keyword is not None and keyword != "":
+        returnlist = trie.getData()
+
+    return render_template('main.html', trie_list = returnlist)
 
 
 @app.route('/<string:name>', methods=['POST'])
