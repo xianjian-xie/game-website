@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, g, redirect, url_for, jsonify, abort, session, send_file
 from werkzeug.utils import secure_filename
 from urllib.parse import urlencode
+from trie import Trie
 import os, math
 
 import db, io
@@ -75,6 +76,18 @@ def home():
         reviews = [record for record in cur]
         if (len(reviews) > k):
             reviews = reviews[:k]
+
+        trie = Trie()
+        cur.execute("SELECT name from game order by popularity DESC")
+        trie_game_list = [record[0] for record in cur]
+        for i in trie_game_list:
+            trie.insert(i)
+
+        #接到请求的处理，需要改
+        keyword = request.args.get("key")
+        trie = request.args.get("trie")
+        if keyword is not None and keyword != "":
+            returnlist = trie.getData()
 
     return render_template('main.html', game_list=game_list,reviews=reviews)
 
