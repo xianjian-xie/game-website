@@ -62,6 +62,7 @@ def test_auth():
 ###put render main and review page function here:
 @app.route('/', methods=['GET'])
 def home():
+    
     with db.get_db_cursor() as cur:
         #may need a  game_list, set default as rating
         cur.execute("SELECT name from game order by rating DESC")
@@ -83,20 +84,19 @@ def home():
         for i in trie_game_list:
             trie.insert(i)
 
-    
         redirect(url_for('home_trie_search',game_list=game_list,reviews=reviews, trie = trie))
-    
+ 
 
-@app.route('/trie', methods=['GET'])
-def home_trie_search(game_list,reviews,trie):
+# @app.route('/trie', methods=['GET'])
+# def home_trie_search(game_list,reviews,trie):
 
-    #接到请求的处理，需要改
-    keyword = request.args.get("key")
-    trie = request.args.get("trie")
-    if keyword is not None and keyword != "":
-        returnlist = trie.getData()
+#     #接到请求的处理，需要改
+#     keyword = request.args.get("key")
+#     trie = request.args.get("trie")
+#     if keyword is not None and keyword != "":
+#         returnlist = trie.getData()
 
-    return render_template('main.html', game_list=game_list,reviews=reviews, trie_list = returnlist)
+#     return render_template('main.html', game_list=game_list,reviews=reviews, trie_list = returnlist)
 
 
 @app.route('/<string:name>', methods=['POST'])
@@ -110,6 +110,7 @@ def edit_person(name):
 
 @app.route('/<string:name>', methods=['GET'])
 def game(name):
+    
     with db.get_db_cursor() as cur:
 
         #first find if game exits in our database and extract game data
