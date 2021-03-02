@@ -88,7 +88,7 @@ def home():
     
 
 @app.route('/trie', methods=['GET'])
-def home_trie_search():
+def home_trie_search(game_list,reviews,trie):
 
     #接到请求的处理，需要改
     keyword = request.args.get("key")
@@ -96,7 +96,7 @@ def home_trie_search():
     if keyword is not None and keyword != "":
         returnlist = trie.getData()
 
-    return render_template('main.html', trie_list = returnlist)
+    return render_template('main.html', game_list=game_list,reviews=reviews, trie_list = returnlist)
 
 
 @app.route('/<string:name>', methods=['POST'])
