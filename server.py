@@ -6,6 +6,9 @@ import os, math
 import db, io
 from auth0 import auth0_setup, require_auth, auth0
 
+import time
+import datetime
+
 
 
 app = Flask(__name__)
@@ -44,6 +47,15 @@ def home():
     return render_template('main.html', game_list=game_list,reviews=reviews)
 
 
+@app.route('/<string:name>', methods=['POST'])
+def edit_person(name):
+    description = request.form.get("description")
+    ts=time.time()
+    timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+    with db.get_db_cursor(True) as cur:
+        cur.execute("INSERT INTO review (reviewer, game, timestamp, title, content, rating) VALUES ('3', %s, %s, 'hello', %s,'5');;", (name, timestamp, description))
+        return redirect(url_for("game", name=name))
+
 @app.route('/<string:name>', methods=['GET'])
 def game(name):
     with db.get_db_cursor() as cur:
@@ -63,7 +75,7 @@ def game(name):
             #may need to consider here is there is no tag
 
             #select the most recent k reviews for the game
-            k=2
+            k=10
             cur.execute("SELECT reviewer,timestamp,title,content,rating,oauth_id from review, reviewer where game = %s and review.reviewer=reviewer.id order by timestamp DESC",(name,))
             reviews = [record for record in cur]
 
@@ -72,8 +84,7 @@ def game(name):
                 reviews = reviews[:k]
 
             #tag is a nested list with count in tag[][1],reviews is a nest list with k reviews
-            return render_template("game.html", name=name, picture=game[0][0], video_link= game[0][1],overall_rating=game[0][2],desciption=game[0][3],platform=game[0][4], \
-            tag=tag,reviews=reviews)
+            return render_template("game.html", name=name, picture=game[0][0], video_link= game[0][1],overall_rating=game[0][2],description=game[0][3],platform=game[0][4], tag=tag,reviews=reviews)
 
             #return render_template("game.html", name=name, picture=game[0][0], video_link= game[0][1],overall_rating=game[0][2],desciption=game[0][3],platform=game[0][4], \
             #tag=tag,reviewer=review[0],title=review[1],content=review[2],review_rating=review[3])

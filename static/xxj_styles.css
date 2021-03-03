@@ -15,13 +15,15 @@ h1,h2,h3,h4,h5,h6 {
 .review-box {
     display: flex;
     margin-bottom: 50px;
+    
 }
 
 .left-box {
     float: left;
-    width: 500px;
+    width: 400px;
     height: auto;
     border: 1px solid #000000;
+    background-color: rgba(128, 128, 128, 0.247)
 }
 
 .right-box {
@@ -29,6 +31,7 @@ h1,h2,h3,h4,h5,h6 {
     width: 200px;
     height: auto;
     border: 1px solid #000000;
+    background-color:  rgba(128, 128, 128, 0.247)
 }
 
 .review-title{
@@ -45,10 +48,15 @@ h1,h2,h3,h4,h5,h6 {
 
 .review-content{
     text-align: left;
+    width: 400px;
+    height: auto;
+    
 }
 
-.review-content h5{
+.review-content img{
     color:rgb(255, 190, 94);
+    width: 400px;
+    height: auto;
 }
 
 .rating{
@@ -134,7 +142,7 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 .ql-toolbar .ql-fill {
-    fill: #fff i !important;
+    fill: #fff  !important;
     stroke: none;
 }
 
