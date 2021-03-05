@@ -59,32 +59,27 @@ def callback():
 def test_auth():
     return render_template("test_auth.html", profile=session['profile'])
 
+#revise
 ###put render main and review page function here:
 @app.route('/', methods=['GET'])
 def home():
     
+   return  render_template('main.html')
+        # redirect(url_for('home_trie_search',game_list=game_list,reviews=reviews, trie = trie))
+
+#add
+@app.route('/main/list', methods=['GET'])
+def homelist():
+    page=request.args.get("page")
     with db.get_db_cursor() as cur:
-        #may need a  game_list, set default as rating
-        cur.execute("SELECT name from game order by rating DESC")
-        game_list = [record[0] for record in cur]
-        if (len(game_list) > 10):
-            game_list = game_list[:10]
-
-
-        #select the most recent k reviews
-        k=5
+        # select the most recent k reviews
+        k = 5*int(page)
+        start=5*int(page-1)
         cur.execute("SELECT reviewer,timestamp,game,title,content,rating from review order by timestamp DESC")
         reviews = [record for record in cur]
         if (len(reviews) > k):
-            reviews = reviews[:k]
-
-        trie = Trie()
-        cur.execute("SELECT name from game order by popularity DESC")
-        trie_game_list = [record[0] for record in cur]
-        for i in trie_game_list:
-            trie.insert(i)
-
-        redirect(url_for('home_trie_search',game_list=game_list,reviews=reviews, trie = trie))
+            reviews = reviews[start:k]
+        return jsonify(reviews)
  
 
 # @app.route('/trie', methods=['GET'])
@@ -142,13 +137,14 @@ def game(name):
             #return render_template("game.html", name=name, picture=game[0][0], video_link= game[0][1],overall_rating=game[0][2],desciption=game[0][3],platform=game[0][4], \
             #tag=tag,reviewer=review[0],title=review[1],content=review[2],review_rating=review[3])
 
+#revise
 @app.route('/search/<string:name>', methods=['GET'])
 def list_game(name):
     with db.get_db_cursor() as cur:
 
         #first find if game exits in our database and extract game data
         app.logger.info("game name %s",name)
-        cur.execute("SELECT picture_link, video, rating, description, platform from game where name = %s;", (name,))
+        cur.execute("SELECT picture_link, video, rating, description, platform,`name` from game where name like %%%s%%;", (name,))
         game = [record for record in cur]
         #app.logger.info("picture is %s",game[0][0])
         if(len(game) == 0):
@@ -161,7 +157,7 @@ def list_game(name):
             #may need to consider here is there is no tag
 
             #tag is a nested list with count in tag[][1],reviews is a nest list with k reviews
-            return render_template("search.html", name=name, picture=game[0][0], video_link= game[0][1],overall_rating=game[0][2],desciption=game[0][3],platform=game[0][4], \
+            return render_template("search.html", name=name, game=game,
             tag=tag)
 
 
@@ -184,20 +180,21 @@ def search():
 @app.route('/sort', methods=['GET'])
 def sort():
     sort_method = request.args.get("method")
-    app.logger.info("Sort by method %s", method)
+    app.logger.info("Sort by method %s", sort_method)
     game_list = []
     with db.get_db_cursor() as cur:
         if sort_method == "rating":
-            cur.execute("SELECT name from game order by rating DESC")
+            cur.execute("SELECT name,description,picture from game order by rating DESC")
             game_list = [record[0] for record in cur]
         elif sort_method == "popularity":
-            cur.execute("SELECT name from game order by popularity DESC")
+            cur.execute("SELECT name,description,picture from game order by popularity DESC")
             game_list = [record[0] for record in cur]
 
     if (len(game_list) > 10):
         game_list = game_list[:10]
+    return jsonify(game_list)
 
-    return render_template('main.html', game_list=game_list)
+    # return render_template('main.html', game_list=game_list)
     #redirect(url_for("home", game_list=game_list))
 
 
