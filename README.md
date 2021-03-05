@@ -5,7 +5,7 @@ CSCI 5117, Spring 2021, [assignment description](https://canvas.umn.edu/courses/
 ## App Info:
 
 * Team Name: Dr Video Games
-* App Name: Movie Review
+* App Name: Game Review
 * App Link: <https://TODO.heroku.com/>
 
 ### Students
