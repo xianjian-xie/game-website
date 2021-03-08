@@ -80,7 +80,7 @@
     function getRank(method) {
         var rankcount=""
 
-        $.get("/sort/?method=" + method, function (result) {
+        $.get("/sort/?method="+method, function (result) {
 
             for (var i = 0; i < result.size(); i++) {
                 rankcount += "                    <li class=\"recommendB-li\">\n" +
