@@ -59,57 +59,36 @@ def callback():
 def test_auth():
     return render_template("test_auth.html", profile=session['profile'])
 
-#revise
+
 ###put render main and review page function here:
 @app.route('/', methods=['GET'])
 def home():
-    
-   return  render_template('main.html')
+    with db.get_db_cursor() as cur:
+        #may need a  game_list, set default as rating
+        cur.execute("SELECT name from game order by rating DESC limit 10")
+        game_list = [record[0] for record in cur]
+
+        #select the most recent k reviews
+        k=5
+        cur.execute("SELECT * from review order by timestamp DESC limit %s",(k,))
+        reviews = [record for record in cur]
+        cur.execute("SELECT * from review order by timestamp DESC limit %s",(k,))
+        reviews_id = [record[0] for record in cur]
+        if (len(reviews) > k):
+            reviews = reviews[:k]
+
+
+    return render_template('main.html', game_list=game_list,reviews=reviews)
         # redirect(url_for('home_trie_search',game_list=game_list,reviews=reviews, trie = trie))
 
-#add
-@app.route('/main/list', methods=['GET'])
-def homelist():
-    page=request.args.get("page")
-    with db.get_db_cursor() as cur:
-        # select the most recent k reviews
-        k = 5*int(page)
-        start=5*int(page-1)
-        cur.execute("SELECT reviewer,timestamp,game,title,content,rating from review order by timestamp DESC")
-        reviews = [record for record in cur]
-        if (len(reviews) > k):
-            reviews = reviews[start:k]
-        return jsonify(reviews)
- 
 
-# @app.route('/trie', methods=['GET'])
-# def home_trie_search(game_list,reviews,trie):
-
-#     #接到请求的处理，需要改
-#     keyword = request.args.get("key")
-#     trie = request.args.get("trie")
-#     if keyword is not None and keyword != "":
-#         returnlist = trie.getData()
-
-#     return render_template('main.html', game_list=game_list,reviews=reviews, trie_list = returnlist)
-
-
-@app.route('/<string:name>', methods=['POST'])
-def edit_person(name):
-    description = request.form.get("description")
-    ts=time.time()
-    timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
-    with db.get_db_cursor(True) as cur:
-        cur.execute("INSERT INTO review (reviewer, game, timestamp, title, content, rating) VALUES ('3', %s, %s, 'hello', %s,'5');;", (name, timestamp, description))
-        return redirect(url_for("game", name=name))
-
-@app.route('/<string:name>', methods=['GET'])
+@app.route('/<name>', methods=['GET'])
 def game(name):
-    
+
     with db.get_db_cursor() as cur:
 
         #first find if game exits in our database and extract game data
-        cur.execute("SELECT picture_link, video, rating, description, platform from game where name = %s;", (name,))
+        cur.execute("SELECT video, rating, description, platform from game where name = %s", (name,))
         #app.logger.info("game name %s",name)
         game = [record for record in cur]
         #app.logger.info("picture is %s",game[0][0])
@@ -127,7 +106,7 @@ def game(name):
             cur.execute("SELECT reviewer,timestamp,title,content,rating,oauth_id from review, reviewer where game = %s and review.reviewer=reviewer.id order by timestamp DESC",(name,))
             reviews = [record for record in cur]
 
-            
+
             if (len(reviews) > k):
                 reviews = reviews[:k]
 
@@ -137,43 +116,24 @@ def game(name):
             #return render_template("game.html", name=name, picture=game[0][0], video_link= game[0][1],overall_rating=game[0][2],desciption=game[0][3],platform=game[0][4], \
             #tag=tag,reviewer=review[0],title=review[1],content=review[2],review_rating=review[3])
 
-#revise
-@app.route('/search/<string:name>', methods=['GET'])
-def list_game(name):
-    with db.get_db_cursor() as cur:
-
-        #first find if game exits in our database and extract game data
-        app.logger.info("game name %s",name)
-        cur.execute("SELECT picture_link, video, rating, description, platform,`name` from game where name like %%%s%%;", (name,))
-        game = [record for record in cur]
-        #app.logger.info("picture is %s",game[0][0])
-        if(len(game) == 0):
-            return abort(404)
-        else:
-            #select game tag
-            cur.execute("SELECT tag, count from game_tag where game = %s",(name,))
-            tag = [record for record in cur]
-
-            #may need to consider here is there is no tag
-
-            #tag is a nested list with count in tag[][1],reviews is a nest list with k reviews
-            return render_template("search.html", name=name, game=game,
-            tag=tag)
-
-
-
 
 ###put search, sort and submit review function here:
 
 #search: input:game name, output:game page
-#fuzzy search not implemented, may need further implementation (might have question here)
+#fuzzy search and auto-complete not implemented, may need further implementation (might have question here)
 @app.route('/search', methods=['GET'])
 def search():
-    #app.logger.info("In search")
-    name = request.args.get("name")
-    app.logger.info("Search for game %s", name)
+    with db.get_db_cursor() as cur:
 
-    return redirect(url_for("list_game",name=name))
+        name = request.args.get("name")
+        app.logger.info("Search for game %s", name)
+        #first find if game exits in our database and extract game data
+        cur.execute("SELECT * from game where name like %s", ("%"+name+"%",))
+        games = [record for record in cur]
+        if(len(games) == 0):
+            return abort(404)
+        else:
+            return render_template("search.html", games=games)
 
 
 #sort: input:sort method, output:a list of top 10 games
@@ -198,8 +158,18 @@ def sort():
     #redirect(url_for("home", game_list=game_list))
 
 
+@app.route('/<name>', methods=['POST'])
+def edit_person(name):
+    description = request.form.get("description")
+    ts=time.time()
+    timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+    with db.get_db_cursor(True) as cur:
+        cur.execute("INSERT INTO review (reviewer, game, timestamp, title, content, rating) VALUES ('3', %s, %s, 'hello', %s,'5');;", (name, timestamp, description))
+        return redirect(url_for("game", name=name))
+
+
 #new review:input-review, return to game page
-@app.route('/<string:name>',methods=['POST'])
+@app.route('/<name>',methods=['POST'])
 def new_review(name):
     with db.get_db_cursor() as cur:
 

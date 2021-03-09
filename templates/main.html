@@ -1,149 +1,187 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta name="viewport" content="width=device-width"/>
-    <title>DR.VIDEO GAMES</title>
-    <script type="text/javascript" src="/static/js/jquery-1.8.3.min.js"></script>
-    <link href="/static/css/style.css" rel="stylesheet" type="text/css"/>
-    <link href="/static/css/index.css" rel="stylesheet" type="text/css"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width" />
+<title>DR.VIDEO GAMES</title>
+<script type="text/javascript" src="/static/js/jquery-1.8.3.min.js"></script>
+<link href="/static/style.css" rel="stylesheet" type="text/css" />
+<link href="/static/index.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 
 <div class="header">
-    <div class="hdDk">
-        <h2 class="logo"><a href="/"><img src="/static/images/logo.png"></a></h2>
-        <a href="{{ url_for("login") }}" class="signA"><i><img
-                src="/staticå/css/images/sign-icon.png"></i><span>Sign in</span></a>
-    </div>
+	<div class="hdDk">
+		<h2 class="logo"><a href="javascript:;"><img src="/static/images/logo.png"></a></h2>
+		<a href="{{ url_for("login") }}" class="signA"><i><img src="/static/images/sign-icon.png"></i><span>Sign in</span></a>
+	</div>
 </div>
 
 <div class="mainB">
-    <form class="pure-form pure-form-stacked" action="{{ url_for("search") }}" method="post">
-        <div class="searchB">
-            <div class="searchB-inp-wrap">
-                <div class="inpB">
-                    <input type="text" name="name" class="inp" placeholder="What Game Are you looking for">
-                </div>
-                <!-- <a type="submit" href="javascript:;" class="btn-search">search</a> -->
-                <button type="submit" class="pure-button pure-button-primary">search</button>
-            </div>
-            <div class="hotB">
-                <p>Hot Search: </p>
-                <ul class="hotB-ul">
-                    <li><a href="javascript:;">only wolves</a></li>
-                    <li><a href="javascript:;">two shades of grey</a></li>
-                    <li><a href="javascript:;">humans wiped out</a></li>
-                    <li><a href="javascript:;">humans wiped out</a></li>
-                </ul>
-            </div>
-        </div>
-    </form>
+<form class="pure-form pure-form-stacked" action="{{ url_for("search") }}" method="GET">
+	<div class="searchB">
+		<div class="searchB-inp-wrap">
+			<div class="inpB">
+				<input type="text" name="name" class="inp" placeholder="What Game Are you looking for">
+			</div>
+			<!-- <a type="submit" href="javascript:;" class="btn-search">search</a> -->
+			<button type="submit" class="pure-button pure-button-primary">search</button>
+		</div>
+		<div class="hotB">
+			<p>Hot Search: </p>
+			<ul class="hotB-ul">
+				<li><a href="javascript:;">only wolves</a></li>
+				<li><a href="javascript:;">two shades of grey</a></li>
+				<li><a href="javascript:;">humans wiped out</a></li>
+				<li><a href="javascript:;">humans wiped out</a></li>
+			</ul>
+		</div>
+	</div>
+</form>
 
-    <div class="hotB hotB-ps">
-        <p>Most Recently Reviewed Games</p>
-    </div>
+	<div class="hotB hotB-ps">
+		<p>Most Recently Reviewed Games</p>
+	</div>
 
-    <div class="listB">
-        <div class="list-l list-common">
-            <div class="evaluateB">
-                <ul class="evaluateB-ul" id="main_list">
+	<div class="listB">
+		<div class="list-l list-common">
+			<div class="evaluateB">
+				<ul class="evaluateB-ul">
 
-                </ul>
-            </div>
-            <a onclick="getList()" class="more">See more ></a>
-        </div>
+          {% for review in reviews %}
 
-        <div class="list-r list-common">
-            <h2 class="title">Ranking<span class="sort" style="right: 100px" onclick="getRank('popularity')">popularity</span><span class="sort" onclick="getRank('rating')">rating</span></h2>
-            <div class="recommendB">
-                <ul class="recommendB-ul" id="rank_list">
+					<li class="evaluateB-li">
+						<div class="evaluateB-li-l">
+							<h3 class="evaluateB-li-l-title">{{review[4]}}</h3>
+							<h5 class="evaluateB-li-l-desc">{{review[5]}}</h5>
+							<div class="evaluateB-li-l-user">
+								<i><img src="/static/images/tx01.jpg"></i>
+								<p>Chen Hu</p>
+							</div>
+						</div>
+						<div class="evaluateB-star-r">
+							<p>{{review[3]}}</p>
+							<div class="evaluateB-star-list">
+								<span class="light-star"></span>
+					            <span></span>
+					            <span></span>
+					            <span></span>
+					            <span></span>
+							</div>
+						</div>
+					</li>
+          {% endfor %}
 
-                </ul>
-            </div>
-        </div>
-    </div>
+					<li class="evaluateB-li">
+						<div class="evaluateB-li-l">
+							<h3 class="evaluateB-li-l-title">Fall Guys: Ultimate Knockout</h3>
+							<h5 class="evaluateB-li-l-desc">I had just reached level four, but I had discovered the possibility of the game. If you join creative workshop to write your own scripts, to voice, I believe this game can bring us more surprises.</h5>
+							<div class="evaluateB-li-l-user">
+								<i><img src="/static/images/tx04.jpg"></i>
+								<p>Benjamin Chen</p>
+							</div>
+						</div>
+						<div class="evaluateB-star-r">
+							<p>02/06/2021</p>
+							<div class="evaluateB-star-list">
+								<span class="light-star"></span>
+					            <span class="light-star"></span>
+					            <span class="light-star"></span>
+					            <span></span>
+					            <span></span>
+							</div>
+						</div>
+					</li>
+          
+				</ul>
+			</div>
+			<a href="javascript:;" class="more">See more ></a>
+		</div>
+
+		<div class="list-r list-common">
+			<h2 class="title">Ranking<span class="sort">sort</span></h2>
+			<div class="recommendB">
+				<ul class="recommendB-ul">
+					<li class="recommendB-li">
+						<a href="javascript:;" class="recommendB-li-a">
+							<div class="recommendB-li-img enlarge"><img src="/static/images/recommend01.jpg"><i class="color-one">1</i></div>
+							<div class="recommendB-li-r-box">
+								<h3 class="evaluateB-li-l-title">Valheim</h3>
+								<h5 class="recommendB-li-r-desc">Action,Adventure,RPG,Superhero,Multiplayer ,Online World,Cinematic</h5>
+							</div>
+						</a>
+					</li>
+					<li class="recommendB-li">
+						<a href="javascript:;" class="recommendB-li-a">
+							<div class="recommendB-li-img enlarge"><img src="/static/images/recommend02.jpg"><i class="color-two">2</i></div>
+							<div class="recommendB-li-r-box">
+								<h3 class="evaluateB-li-l-title">Marvel’s Avengers</h3>
+								<h5 class="recommendB-li-r-desc">Action,Adventure,RPG,Superhero,Multiplayer ,Online World,Cinematic</h5>
+							</div>
+						</a>
+					</li>
+					<li class="recommendB-li">
+						<a href="javascript:;" class="recommendB-li-a">
+							<div class="recommendB-li-img enlarge"><img src="/static/images/recommend03.jpg"><i class="color-three">3</i></div>
+							<div class="recommendB-li-r-box">
+								<h3 class="evaluateB-li-l-title">Valheim</h3>
+								<h5 class="recommendB-li-r-desc">Action,Adventure,RPG,Superhero,Multiplayer ,Online World,Cinematic</h5>
+							</div>
+						</a>
+					</li>
+					<li class="recommendB-li">
+						<a href="javascript:;" class="recommendB-li-a">
+							<div class="recommendB-li-img enlarge"><img src="/static/images/recommend04.jpg"><i>4</i></div>
+							<div class="recommendB-li-r-box">
+								<h3 class="evaluateB-li-l-title">Craftopia</h3>
+								<h5 class="recommendB-li-r-desc">Action,Adventure,RPG,Superhero,Multiplayer ,Online World,Cinematic</h5>
+							</div>
+						</a>
+					</li>
+					<li class="recommendB-li">
+						<a href="javascript:;" class="recommendB-li-a">
+							<div class="recommendB-li-img enlarge"><img src="/static/images/recommend05.jpg"><i>5</i></div>
+							<div class="recommendB-li-r-box">
+								<h3 class="evaluateB-li-l-title">WORLD WAR Z</h3>
+								<h5 class="recommendB-li-r-desc">Action,Adventure,RPG,Superhero,Multiplayer ,Online World,Cinematic</h5>
+							</div>
+						</a>
+					</li>
+					<li class="recommendB-li">
+						<a href="javascript:;" class="recommendB-li-a">
+							<div class="recommendB-li-img enlarge"><img src="/static/images/recommend06.jpg"><i>6</i></div>
+							<div class="recommendB-li-r-box">
+								<h3 class="evaluateB-li-l-title">Cities: Skylines</h3>
+								<h5 class="recommendB-li-r-desc">Action,Adventure,RPG,Superhero,Multiplayer ,Online World,Cinematic</h5>
+							</div>
+						</a>
+					</li>
+					<li class="recommendB-li">
+						<a href="javascript:;" class="recommendB-li-a">
+							<div class="recommendB-li-img enlarge"><img src="/static/images/recommend01.jpg"><i>7</i></div>
+							<div class="recommendB-li-r-box">
+								<h3 class="evaluateB-li-l-title">Valheim</h3>
+								<h5 class="recommendB-li-r-desc">Action,Adventure,RPG,Superhero,Multiplayer ,Online World,Cinematic</h5>
+							</div>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
 </div>
 </body>
 
 <script language="JavaScript" type="text/JavaScript">
-    $(function () {
-        $('.mainB').css({'padding-top': parseFloat($('.header').height())});
+	$(function(){
+		$('.mainB').css({'padding-top':parseFloat($('.header').height())});
 
-        /*$(".evaluate-box-starB span").click(function() {
+		/*$(".evaluate-box-starB span").click(function() {
             $(this).addClass("light-star");
             $(this).prevAll().addClass("light-star");
             $(this).nextAll().removeClass("light-star");
         });*/
-    })
-    function getRank(method) {
-        var rankcount=""
-
-        $.get("/sort/?method="+method, function (result) {
-
-            for (var i = 0; i < result.size(); i++) {
-                rankcount += "                    <li class=\"recommendB-li\">\n" +
-                    "                        <a href=\"javascript:;\" class=\"recommendB-li-a\">\n" +
-                    "                            <div class=\"recommendB-li-img enlarge\"><img src=\""+result[i][2]+"\"><i\n" +
-                    "                                    class=\"color-one\">1</i></div>\n" +
-                    "                            <div class=\"recommendB-li-r-box\">\n" +
-                    "                                <h3 class=\"evaluateB-li-l-title\">"+result[i][0]+"</h3>\n" +
-                    "                                <h5 class=\"recommendB-li-r-desc\">"+result[i][1]+"</h5>\n" +
-                    "                            </div>\n" +
-                    "                        </a>\n" +
-                    "                    </li>\n"
-            }
-
-            $("#rank_list").html(rankcount)
-        }
-
-    }
-    getRank()
-    var page = 1;
-    var content = ""
-
-
-    function getList() {
-
-         $.get("/main/list/?page="+page, function (result) {
-
-                     page += 1;
-
-        for (var i = 0; i < result.size(); i++) {
-            content += '                    <li class="evaluateB-li">\n' +
-                '                        <div class="evaluateB-li-l">\n' +
-                '                            <h3 class="evaluateB-li-l-title">'+result[i]["3"]+'</h3>\n' +
-                '                            <h5 class="evaluateB-li-l-desc">'+result[i][4]+'</h5>\n' +
-                '                            <div class="evaluateB-li-l-user">\n' +
-                '                                <i><img src="/static/images/tx01.jpg"></i>\n' +
-                '                                <p>'+result[i][0]+'</p>\n' +
-                '                            </div>\n' +
-                '                        </div>\n' +
-                '                        <div class="evaluateB-star-r">\n' +
-                '                            <p>'+result[i][1]+'</p>\n' +
-                '                            <div class="evaluateB-star-list">\n' +
-                '                                <span class="light-star"></span>\n' +
-                '                                <span></span>\n' +
-                '                                <span></span>\n' +
-                '                                <span></span>\n' +
-                '                                <span></span>\n' +
-                '                            </div>\n' +
-                '                        </div>\n' +
-                '                    </li>\n'
-        }
-
-        $("#main_list").html(content)
-
-     });
-
-
-    }
-
-    getList();
-
-
-
+	})
 </script>
 
 

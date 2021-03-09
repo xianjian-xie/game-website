@@ -12,7 +12,7 @@
 
 <div class="header">
 	<div class="hdDk">
-		<h2 class="logo"><a href="/"><img src="/static/images/logo.png"></a></h2>
+		<h2 class="logo"><a href="javascript:;"><img src="/static/images/logo.png"></a></h2>
 		<a href="javascript:;" class="signA"><i><img src="/static/images/sign-icon.png"></i><span>Sign in</span></a>
 	</div>
 </div>
@@ -38,30 +38,27 @@
 	</div>
 
 	<div class="result-title"><p>57 <span>relevant search result</span></p></div>
-{#picture=game[0][0], video_link= game[0][1],overall_rating=game[0][2],desciption=game[0][3],platform=game[0][4]#}
+
 	<div class="listB">
+    {% for game in games %}
 		<div class="list-l result-l">
 			<div class="resultB">
 				<ul class="resultB-ul">
-                    {% for foo in game %}
-                    					<li class="resultB-li">
-						<div class="resultB-img"><img src={{foo.0}}></div>
+					<li class="resultB-li">
+						<!-- <div class="resultB-img"><img src={{picture}}></div> -->
 						<div class="resultB-content">
-							<h3> <a href="{{ url_for("game", name=game.5) }}"> {{game.5}} </a> </h3>
-							<h5 class="evaluateB-li-l-desc resultB-li-l-desc"> {{game.3}} </h5>
+							<h3> <a href="{{ url_for("game", name=game[1]) }}"> {{game[1]}} </a> </h3>
+							<h5 class="evaluateB-li-l-desc resultB-li-l-desc"> {{game[5]}} </h5>
 							<p class="infoB">
-								<span class="message">{{ game.4 }}</span>
-								<span class="give">{{ game.2 }}</span>
+								<span class="message">2536</span>
+								<span class="give">620</span>
 							</p>
 						</div>
 					</li>
-
-                    {% endfor %}
-
-
 				</ul>
 			</div>
 		</div>
+    {% endfor %}
 
 		<div class="list-r list-common">
 			<h2 class="title">Ranking（with sort）<span class="sort">sort</span></h2>
