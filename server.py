@@ -58,6 +58,7 @@ def callback():
     app.logger.info("The url is  %s",session['return_url'])
     return redirect(session['return_url'])
 
+
 @app.route('/test_auth')
 @require_auth
 def test_auth():
@@ -67,6 +68,9 @@ def test_auth():
 ###put render main and review page function here:
 @app.route('/', methods=['GET'])
 def home():
+    if 'profile' in session:
+        signin = True
+
     with db.get_db_cursor() as cur:
         #get all possible ratings
         cur.execute("SELECT * from game order by rating DESC limit 10")
@@ -83,7 +87,7 @@ def home():
         if (len(reviews) > k):
             reviews = reviews[:k]
 
-    return render_template('main.html',reviews=reviews,rating_game_list=rating_game_list,popularity_game_list=popularity_game_list)
+    return render_template('main.html',reviews=reviews,rating_game_list=rating_game_list,popularity_game_list=popularity_game_list,signin = signin)
         # redirect(url_for('home_trie_search',game_list=game_list,reviews=reviews, trie = trie))
 
 
