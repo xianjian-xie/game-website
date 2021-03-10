@@ -1,9 +1,9 @@
 body {
-    color: #666;
+    color:black;
 }
 
 h1,h2,h3,h4,h5,h6 {
-    color: #111;
+    color: black;
 }
 
 .review-area {
@@ -22,16 +22,16 @@ h1,h2,h3,h4,h5,h6 {
     float: left;
     width: 400px;
     height: auto;
-    border: 1px solid #000000;
-    background-color: rgba(128, 128, 128, 0.247)
+    border: 1px solid  #cecece transparent transparent transparent;
+    background-color: white
 }
 
 .right-box {
     float: left;
     width: 200px;
     height: auto;
-    border: 1px solid #000000;
-    background-color:  rgba(128, 128, 128, 0.247)
+    border: 1px solid#cecece transparent transparent transparent;
+    background-color: white
 }
 
 .review-title{
@@ -39,7 +39,7 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 .review-title h3{
-   color: rgb(255, 190, 94)
+   color:black
 }
 
 .reviewer{
@@ -132,10 +132,10 @@ h1,h2,h3,h4,h5,h6 {
         }
 
 .text-box {
-    background: rgb(49,49,49); /* bluish grey */
-    color: rgb(255, 190, 94); /* steel blue */
+    background:#cecece transparent transparent transparent; /* bluish grey */
+    color: black; /* steel blue */
 }
-
+/*
 .ql-toolbar .ql-stroke {
     fill: none;
     stroke: #fff !important;
@@ -150,8 +150,9 @@ h1,h2,h3,h4,h5,h6 {
     color: #fff !important;
 }
 
+*/
     .text-box-head {
-        color: #fff;
+        color: black;
         padding-bottom: 0.2em;
         font-weight: 400;
         /*text-transform: uppercase;*/

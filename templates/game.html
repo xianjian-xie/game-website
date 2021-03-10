@@ -11,25 +11,40 @@
 
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <script src="//cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
+
+    <script type="text/javascript" src="/static/js/jquery-1.8.3.min.js"></script>
+    <link href="/static/style.css" rel="stylesheet" type="text/css" />
+    <link href="/static/index.css" rel="stylesheet" type="text/css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="static/autocomplete.js" ></script>
+
+    
   </head>
 
-  <body>
-    <div>
-      <div class="header">
-          <div class="pure-menu pure-menu-horizontal">
-              <a class="pure-menu-heading" href="">Dr. Video Games</a>
 
-              <ul class="pure-menu-list">
-                  <li class="pure-menu-item pure-menu-selected"><a href="#" class="pure-menu-link">Home</a></li>
-                  <li class="pure-menu-item"><a href="#" class="pure-menu-link">Blog</a></li>
-                  <li class="pure-menu-item"><a href="#" class="pure-menu-link">About</a></li>
-              </ul>
-          </div>
+  
+  <body>
+    
+      {% if signin == True %}
+      <div class="header">
+	      <div class="hdDk">
+		      <h2 class="logo"><a href="javascript:;"><img src="/static/images/logo.png"></a></h2>
+		      <a href="{{ url_for("logout") }}" class="signA"><i><img src="/static/images/sign-icon.png"></i><span>Log out</span></a>
+	      </div>
       </div>
+      {% else %}
+      <div class="header">
+	      <div class="hdDk">
+		      <h2 class="logo"><a href="javascript:;"><img src="/static/images/logo.png"></a></h2>
+		      <a href="{{ url_for("login") }}" class="signA"><i><img src="/static/images/sign-icon.png"></i><span>Sign in</span></a>
+	      </div>
+      </div>
+      {% endif %}
 
       <div class="pure-g">
         <div class="photo-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-2">
-          <img src="{{picture}}"
+          <img src="https://wallpapercave.com/wp/p8fmFoP.jpg"
                alt="dota2">
         </div>
 
@@ -37,7 +52,8 @@
           <img src="https://wallpapercave.com/wp/p8fmFoP.jpg"
                alt="dota2">
         </div>
-
+      
+        
 
 
         <div class="text-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-1">
@@ -136,12 +152,6 @@ document.querySelector("#updateDescription").addEventListener("click", (e) => {
         </script>
 
 
-
-
-
-
-
-      </div>
-    </div>
+   </div>
   </body>
 </html>

@@ -168,7 +168,7 @@ def edit_person(id):
     ts=time.time()
     timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
     with db.get_db_cursor(True) as cur:
-        cur.execute("INSERT INTO review (reviewer, game, timestamp, title, content, rating) VALUES ('3', %s, %s, 'hello', %s,'5');;", (name, timestamp, description))
+        cur.execute("INSERT INTO review (reviewer_id, game_id, timestamp, title, content, rating) VALUES ('1', %s, %s, 'hello', %s,'5');;", (id, timestamp, description))
         return redirect(url_for("game", id=id))
 
 
