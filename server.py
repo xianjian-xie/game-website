@@ -72,6 +72,8 @@ def test_auth():
 def home():
     if 'profile' in session:
         signin = True
+    else:
+        signin = False
 
     with db.get_db_cursor() as cur:
         #get all possible ratings
