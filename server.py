@@ -28,12 +28,12 @@ def error404(error):
 ### AUTH:
 @app.route('/login')
 def login():
-    app.logger.info("The url is  %s",request.url)
+    app.logger.info("The url is  %s",request.referrer)
     if 'profile' in session:
-        return redirect('/test_auth')
+        return redirect(request.referrer)
         #return redirect(url_for('test_auth'))
     else:
-        session['return_url'] = request.url
+        session['return_url'] = request.referrer
         return auth0().authorize_redirect(redirect_uri=url_for('callback', _external=True))
 
 @app.route('/logout')
@@ -56,7 +56,7 @@ def callback():
     }
 
     app.logger.info("The url is  %s",session['return_url'])
-    return redirect('/test_auth')
+    return redirect(session['return_url'])
 
 @app.route('/test_auth')
 @require_auth
