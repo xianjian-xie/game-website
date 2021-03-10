@@ -30,7 +30,7 @@ def error404(error):
 def login():
     app.logger.info("The url is  %s",request.url)
     if 'profile' in session:
-        return redirect(request.url)
+        return redirect('/test_auth')
         #return redirect(url_for('test_auth'))
     else:
         session['return_url'] = request.url
