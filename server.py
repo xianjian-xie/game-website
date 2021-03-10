@@ -56,7 +56,7 @@ def callback():
     }
 
     app.logger.info("The url is  %s",session['return_url'])
-    return redirect(session['return_url'])
+    return redirect('/test_auth')
 
 @app.route('/test_auth')
 @require_auth
