@@ -29,7 +29,8 @@ def error404(error):
 @app.route('/login')
 def login():
     if 'profile' in session:
-        return redirect(url_for('test_auth'))
+        return redirect(request.url)
+        #return redirect(url_for('test_auth'))
     else:
         return auth0().authorize_redirect(redirect_uri=url_for('callback', _external=True))
 
