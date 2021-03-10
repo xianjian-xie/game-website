@@ -64,9 +64,11 @@ def test_auth():
 @app.route('/', methods=['GET'])
 def home():
     with db.get_db_cursor() as cur:
-        #may need a  game_list, set default as rating
-        cur.execute("SELECT name from game order by rating DESC limit 10")
-        game_list = [record[0] for record in cur]
+        #get all possible ratings
+        cur.execute("SELECT * from game order by rating DESC limit 10")
+        rating_game_list = [record for record in cur]
+        cur.execute("SELECT * from game order by popularity DESC limit 10")
+        popularity_game_list = [record for record in cur]
 
         #select the most recent k reviews
         k=5
@@ -77,33 +79,35 @@ def home():
         if (len(reviews) > k):
             reviews = reviews[:k]
 
-
-    return render_template('main.html', game_list=game_list,reviews=reviews)
+    return render_template('main.html',reviews=reviews,rating_game_list=rating_game_list,popularity_game_list=popularity_game_list)
         # redirect(url_for('home_trie_search',game_list=game_list,reviews=reviews, trie = trie))
 
 
-@app.route('/<name>', methods=['GET'])
-def game(name):
+@app.route('/<int:id>', methods=['GET'])
+def game(id):
 
     with db.get_db_cursor() as cur:
 
         #first find if game exits in our database and extract game data
-        cur.execute("SELECT video, rating, description, platform from game where name = %s", (name,))
+        cur.execute("SELECT  * from game where id = %s", (id,))
         #app.logger.info("game name %s",name)
-        game = [record for record in cur]
+        games = [record for record in cur]
+        game = games[0]
         #app.logger.info("picture is %s",game[0][0])
         if(len(game) == 0):
             return abort(404)
         else:
+            #select pictures
+
             #select game tag
-            cur.execute("SELECT tag, count from game_tag where game = %s",(name,))
-            tag = [record for record in cur]
+            cur.execute("SELECT * from game_tag where game_id = %s",(id,))
+            tags = [record for record in cur]
 
             #may need to consider here is there is no tag
 
             #select the most recent k reviews for the game
             k=10
-            cur.execute("SELECT reviewer,timestamp,title,content,rating,oauth_id from review, reviewer where game = %s and review.reviewer=reviewer.id order by timestamp DESC",(name,))
+            cur.execute("SELECT * from review, reviewer where game_id = %s and review.reviewer_id=reviewer.id order by timestamp DESC",(id,))
             reviews = [record for record in cur]
 
 
@@ -111,7 +115,7 @@ def game(name):
                 reviews = reviews[:k]
 
             #tag is a nested list with count in tag[][1],reviews is a nest list with k reviews
-            return render_template("game.html", name=name, picture=game[0][0], video_link= game[0][1],overall_rating=game[0][2],description=game[0][3],platform=game[0][4], tag=tag,reviews=reviews)
+            return render_template("game.html", game=game,tags=tags,reviews=reviews)
 
             #return render_template("game.html", name=name, picture=game[0][0], video_link= game[0][1],overall_rating=game[0][2],desciption=game[0][3],platform=game[0][4], \
             #tag=tag,reviewer=review[0],title=review[1],content=review[2],review_rating=review[3])
@@ -125,7 +129,7 @@ def game(name):
 def search():
     with db.get_db_cursor() as cur:
 
-        name = request.args.get("name")
+        name = request.args.get("global")
         app.logger.info("Search for game %s", name)
         #first find if game exits in our database and extract game data
         cur.execute("SELECT * from game where name like %s", ("%"+name+"%",))
@@ -136,41 +140,29 @@ def search():
             return render_template("search.html", games=games)
 
 
-#sort: input:sort method, output:a list of top 10 games
-@app.route('/sort', methods=['GET'])
-def sort():
-    sort_method = request.args.get("method")
-    app.logger.info("Sort by method %s", sort_method)
-    game_list = []
+@app.route("/autocomplete", methods=['GET'])
+def search_autocomplete():
+    query = request.args.get("query")
     with db.get_db_cursor() as cur:
-        if sort_method == "rating":
-            cur.execute("SELECT name,description,picture from game order by rating DESC")
-            game_list = [record[0] for record in cur]
-        elif sort_method == "popularity":
-            cur.execute("SELECT name,description,picture from game order by popularity DESC")
-            game_list = [record[0] for record in cur]
-
-    if (len(game_list) > 10):
-        game_list = game_list[:10]
-    return jsonify(game_list)
-
-    # return render_template('main.html', game_list=game_list)
-    #redirect(url_for("home", game_list=game_list))
+        cur.execute("SELECT name FROM game WHERE name like %s;", ("%"+query+"%", ))
+        results = [x[0] for x in cur]
+        return jsonify(results)
 
 
-@app.route('/<name>', methods=['POST'])
-def edit_person(name):
+
+@app.route('/<int:id>', methods=['POST'])
+def edit_person(id):
     description = request.form.get("description")
     ts=time.time()
     timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
     with db.get_db_cursor(True) as cur:
         cur.execute("INSERT INTO review (reviewer, game, timestamp, title, content, rating) VALUES ('3', %s, %s, 'hello', %s,'5');;", (name, timestamp, description))
-        return redirect(url_for("game", name=name))
+        return redirect(url_for("game", id=id))
 
 
 #new review:input-review, return to game page
-@app.route('/<name>',methods=['POST'])
-def new_review(name):
+@app.route('/<int:id>',methods=['POST'])
+def new_review(id):
     with db.get_db_cursor() as cur:
 
         #insert review into review table
@@ -207,4 +199,4 @@ def new_review(name):
             overall_rating = (overall_rating*review_number + rating)/(review_number+1)
             cur.excute("UPDATE game set rating = %s, review_number = %s where name = %s",(overall_rating,review_number+1,name,))
 
-    return redirect(url_for('game',name=name))
+    return redirect(url_for('game',id=id))
