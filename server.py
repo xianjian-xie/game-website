@@ -29,6 +29,7 @@ def error404(error):
 @app.route('/login')
 def login():
     if 'profile' in session:
+        app.logger.info("The url is  %s",request.url)
         return redirect(request.url)
         #return redirect(url_for('test_auth'))
     else:
@@ -53,7 +54,8 @@ def callback():
         'picture': userinfo['picture']
     }
 
-    return redirect('/test_auth')
+    app.logger.info("The url is  %s",request.url)
+    return redirect(request.url)
 
 @app.route('/test_auth')
 @require_auth
