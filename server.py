@@ -40,10 +40,17 @@ def login():
 def logout():
     session.clear()
     app.logger.info("Return URL is %s",request.referrer)
-    #session['return_url'] = request.referrer
-    params = { 'returnTo': request.referrer, 'client_id': os.environ['AUTH0_CLIENT_ID'] }
+    session['return_url'] = request.referrer
+
+    params = { 'returnTo': url_for('callback2', _external=True), 'client_id': os.environ['AUTH0_CLIENT_ID'] }
     # params = { 'returnTo': url_for('home', _external=True), 'client_id': os.environ['AUTH0_CLIENT_ID'] }
     return redirect(auth0().api_base_url + '/v2/logout?' + urlencode(params))
+
+
+@app.route('/callback2')
+def callback2():
+    return redirect(session['return_url'])
+
 
 @app.route('/callback')
 def callback():
