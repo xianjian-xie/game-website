@@ -91,6 +91,8 @@ def home():
         cur.execute("SELECT * from review, reviewer where review.reviewer_id=reviewer.id order by timestamp DESC limit %s",(k,))
         reviews = [record for record in cur]
 
+        # session['search_trie'] = trie.__dict__
+
     return render_template('main.html',reviews=reviews,rating_game_list=rating_game_list,popularity_game_list=popularity_game_list,signin = signin)
         # redirect(url_for('home_trie_search',game_list=game_list,reviews=reviews, trie = trie))
 
@@ -127,7 +129,6 @@ def game(id):
             cur.execute("SELECT * from review, reviewer where game_id = %s and review.reviewer_id=reviewer.id order by timestamp DESC",(id,))
             reviews = [record for record in cur]
 
-
             if (len(reviews) > k):
                 reviews = reviews[:k]
 
@@ -160,10 +161,21 @@ def search():
 @app.route("/autocomplete", methods=['GET'])
 def search_autocomplete():
     query = request.args.get("query")
+    app.logger.info("zheshi query %s",query)
+
     with db.get_db_cursor() as cur:
-        cur.execute("SELECT name FROM game WHERE name like %s;", ("%"+query+"%", ))
-        results = [x[0] for x in cur]
-        return jsonify(results)
+        trie = Trie()
+        cur.execute("SELECT name from game order by popularity DESC")
+        trie_game_list = [record[0] for record in cur]
+        for i in trie_game_list:
+            trie.insert(i)
+
+        # trie = session['search_trie']
+        # app.logger.info(trie.getData(query))
+    # with db.get_db_cursor() as cur:
+    #     cur.execute("SELECT name FROM game WHERE name like %s;", ("%"+query+"%", ))
+    #     results = [x[0] for x in cur]
+        return jsonify(list(trie.getData(query)))
 
 
 
