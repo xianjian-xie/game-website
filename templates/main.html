@@ -107,10 +107,10 @@ else if (selectedValue == "2") {
 					<li class="evaluateB-li">
 						<div class="evaluateB-li-l">
 							<h3 class="evaluateB-li-l-title">{{review[4]}}</h3>
-							<h5 class="evaluateB-li-l-desc">{{review[5]}}</h5>
+							<h5 class="evaluateB-li-l-desc">{{review[5]|safe}}</h5>
 							<div class="evaluateB-li-l-user">
-								<i><img src="/static/images/tx01.jpg"></i>
-								<p>Chen Hu</p>
+								<i><img src={{review[10]}}></i>
+								<p>{{review[9]}}</p>
 							</div>
 						</div>
 						<div class="evaluateB-star-r">
@@ -165,15 +165,13 @@ else if (selectedValue == "2") {
 
 				<div class="recommendB" id = "popularity_list">
 					<ul class="recommendB-ul">
-
 						{% for game in popularity_game_list %}
-
 						<li class="recommendB-li">
-							<a href="javascript:;" class="recommendB-li-a">
-								<div class="recommendB-li-img enlarge"><img src="/static/images/recommend01.jpg"><i class="color-one">1</i></div>
+							<a href="/{{game[0]}}" class="recommendB-li-a">
+								<div class="recommendB-li-img enlarge"><img src={{game[9]}}><i class="color-one">{{loop.index}}</i></div>
 								<div class="recommendB-li-r-box">
 									<h3 class="evaluateB-li-l-title">{{game[1]}}</h3>
-									<h5 class="recommendB-li-r-desc">{{game[5]}}</h5>
+									<h5 class="recommendB-li-r-desc">{{game[7]}}</h5>
 								</div>
 							</a>
 						</li>
@@ -190,11 +188,11 @@ else if (selectedValue == "2") {
 					{% for game in rating_game_list %}
 
 					<li class="recommendB-li">
-						<a href="javascript:;" class="recommendB-li-a">
-							<div class="recommendB-li-img enlarge"><img src="/static/images/recommend01.jpg"><i class="color-one">1</i></div>
+						<a href="/{{game[0]}}" class="recommendB-li-a">
+							<div class="recommendB-li-img enlarge"><img src={{game[9]}}><i class="color-one">{{loop.index}}</i></div>
 							<div class="recommendB-li-r-box">
 								<h3 class="evaluateB-li-l-title">{{game[1]}}</h3>
-								<h5 class="recommendB-li-r-desc">{{game[5]}}</h5>
+								<h5 class="recommendB-li-r-desc">{{game[7]}}</h5>
 							</div>
 						</a>
 					</li>
