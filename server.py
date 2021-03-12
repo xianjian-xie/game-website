@@ -113,6 +113,8 @@ def game(id):
             cur_popularity = cur_popularity + 1
             cur.execute("UPDATE game set popularity = %s where id = %s",(cur_popularity,id,))
             #select pictures
+            cur.execute("SELECT * from picture where id = %s",(id,))
+            pictures=[record for record in cur]
 
             #select game tag
             cur.execute("SELECT * from game_tag where game_id = %s",(id,))
@@ -130,7 +132,7 @@ def game(id):
                 reviews = reviews[:k]
 
             #tag is a nested list with count in tag[][1],reviews is a nest list with k reviews
-            return render_template("game.html", game=game,tags=tags,reviews=reviews)
+            return render_template("game.html", game=game,tags=tags,reviews=reviews, pictures=pictures)
 
             #return render_template("game.html", name=name, picture=game[0][0], video_link= game[0][1],overall_rating=game[0][2],desciption=game[0][3],platform=game[0][4], \
             #tag=tag,reviewer=review[0],title=review[1],content=review[2],review_rating=review[3])
@@ -168,10 +170,11 @@ def search_autocomplete():
 @app.route('/<int:id>', methods=['POST'])
 def edit_person(id):
     description = request.form.get("description")
+    rating = request.form.get("rating")
     ts=time.time()
     timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
     with db.get_db_cursor(True) as cur:
-        cur.execute("INSERT INTO review (reviewer_id, game_id, timestamp, title, content, rating) VALUES ('18', %s, %s, 'hello', %s,'5');;", (id, timestamp, description))
+        cur.execute("INSERT INTO review (reviewer_id, game_id, timestamp, title, content, rating) VALUES ('18', %s, %s, 'hello', %s, %s);", (id, timestamp, description,rating))
         return redirect(url_for("game", id=id))
 
 
