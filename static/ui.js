@@ -47,6 +47,6 @@
         }
     }
 
-    document.addEventListener('click', handleEvent);
+    // document.addEventListener('click', handleEvent);
 
 }(this, this.document));

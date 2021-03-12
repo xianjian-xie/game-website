@@ -7,30 +7,12 @@
 <script type="text/javascript" src="/static/js/jquery-1.8.3.min.js"></script>
 <link href="/static/style.css" rel="stylesheet" type="text/css" />
 <link href="/static/index.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="static/search-box.css"/>
 <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.5/build/pure-min.css" integrity="sha384-LTIDeidl25h2dPxrB2Ekgc9c7sEC3CWGM6HeFmuDNUjX76Ert4Z4IY714dhZHPLd" crossorigin="anonymous">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="static/autocomplete.js" ></script>
-<!-- <script src="static/sortgame.js"></script> -->
-
-<script type="text/javascript">
-
-function hiddenshow() {
- var selectBox = document.getElementById("selectBox");
- var popuList = document.getElementById("popularity_list");
- var ratingList = document.getElementById("rating_list");
- var selectedValue = selectBox.options[selectBox.selectedIndex].value;
- if (selectedValue == "1") {
-   popuList.style.display = "block";
-   ratingList.style.display = "none";
- }
-
-else if (selectedValue == "2") {
-  popuList.style.display = "none";
-  ratingList.style.display = "block";
-}
-}
-
-</script>
+<script src="static/see-more.js"></script>
+<script src="static/sortgame.js"></script>
 
 
 </head>
@@ -40,7 +22,7 @@ else if (selectedValue == "2") {
 <div class="header">
 	<div class="hdDk">
 		<h2 class="logo"><a href="javascript:;"><img src="/static/images/logo.png"></a></h2>
-		<a href="{{ url_for("logout") }}" class="signA"><i><img src="/static/images/sign-icon.png"></i><span>Log out</span></a>
+		<a href="{{ url_for("logout") }}" class="signA"><i><img src={{avatar}}></i><span>Log out</span></a>
 	</div>
 </div>
 

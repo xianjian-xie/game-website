@@ -39,6 +39,7 @@ def login():
 @app.route('/logout')
 def logout():
     session.clear()
+    app.logger.info("Return URL is %s",request.referrer)
     #session['return_url'] = request.referrer
     params = { 'returnTo': request.referrer, 'client_id': os.environ['AUTH0_CLIENT_ID'] }
     # params = { 'returnTo': url_for('home', _external=True), 'client_id': os.environ['AUTH0_CLIENT_ID'] }
@@ -74,8 +75,10 @@ def callback():
 def home():
     if 'profile' in session:
         signin = True
+        avatar = session['profile']["picture"]
     else:
         signin = False
+        avatar = None
 
     with db.get_db_cursor() as cur:
         #get all possible ratings
@@ -93,12 +96,18 @@ def home():
 
         # session['search_trie'] = trie.__dict__
 
-    return render_template('main.html',reviews=reviews,rating_game_list=rating_game_list,popularity_game_list=popularity_game_list,signin = signin)
+    return render_template('main.html',reviews=reviews,rating_game_list=rating_game_list,popularity_game_list=popularity_game_list,signin = signin,avatar = avatar)
         # redirect(url_for('home_trie_search',game_list=game_list,reviews=reviews, trie = trie))
 
 
 @app.route('/<int:id>', methods=['GET'])
 def game(id):
+    if 'profile' in session:
+        signin = True
+        avatar = session['profile']["picture"]
+    else:
+        signin = False
+        avatar = None
 
     with db.get_db_cursor(True) as cur:
 
@@ -139,7 +148,7 @@ def game(id):
                 reviews = reviews[:k]
 
             #tag is a nested list with count in tag[][1],reviews is a nest list with k reviews
-            return render_template("game.html", game=game,tags=tags,reviews=reviews, pictures=pictures)
+            return render_template("game.html", game=game,tags=tags,reviews=reviews, pictures=pictures,signin = signin,avatar = avatar)
 
             #return render_template("game.html", name=name, picture=game[0][0], video_link= game[0][1],overall_rating=game[0][2],desciption=game[0][3],platform=game[0][4], \
             #tag=tag,reviewer=review[0],title=review[1],content=review[2],review_rating=review[3])
@@ -187,13 +196,19 @@ def search_autocomplete():
 
 @app.route('/<int:id>', methods=['POST'])
 def edit_person(id):
-    description = request.form.get("description")
-    rating = request.form.get("rating")
-    ts=time.time()
-    timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+    profile=session['profile']
+    app.logger.info("The profile is %s", profile)
     with db.get_db_cursor(True) as cur:
-        cur.execute("INSERT INTO review (reviewer_id, game_id, timestamp, title, content, rating) VALUES ('18', %s, %s, 'hello', %s, %s);", (id, timestamp, description,rating))
-        return redirect(url_for("game", id=id))
+        cur.execute("SELECT id from reviewer where oauth_id = %s;",(profile["user_id"],))
+        reviewer_id = [record[0] for record in cur][0]
+        app.logger.info("Reviewer ID is %s", reviewer_id)
+        description = request.form.get("description")
+        rating = request.form.get("rating")
+        ts=time.time()
+        timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+        cur.execute("INSERT INTO review (reviewer_id, game_id, timestamp, title, content, rating) VALUES (%s, %s, %s, 'hello', %s, %s);", (reviewer_id, id,timestamp, description,rating,))
+
+    return redirect(url_for("game", id=id))
 
 
 #new review:input-review, return to game page

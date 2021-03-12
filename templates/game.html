@@ -28,6 +28,26 @@
 </head>
 <body>
 
+  {% if signin == True %}
+  <div class="header">
+  	<div class="hdDk">
+  		<h2 class="logo"><a href="javascript:;"><img src="/static/images/logo.png"></a></h2>
+  		<a href="{{ url_for("logout") }}" class="signA"><i><img src={{avatar}}></i><span>Log out</span></a>
+  	</div>
+  </div>
+
+  {% else %}
+
+  <div class="header">
+  	<div class="hdDk">
+  		<h2 class="logo"><a href="javascript:;"><img src="/static/images/logo.png"></a></h2>
+  		<a href="{{ url_for("login") }}" class="signA"><i><img src="/static/images/sign-icon.png"></i><span>Sign in</span></a>
+  	</div>
+  </div>
+
+  {% endif %}
+
+
 
 
 
@@ -141,6 +161,22 @@
     </div>
   </div>
 </div>
+
+
+<!-- script for turn on/off review -->
+
+
+  {% if signin == True %}
+  <script type="text/javascript">
+   document.getElementById("updateDescription").disabled = false;
+   </script>
+  {% else %}
+  <script type="text/javascript">
+   document.getElementById("updateDescription").disabled = true;
+   </script>
+  {% endif %}
+
+
 
 <script>
   var toolbarOptions = [
