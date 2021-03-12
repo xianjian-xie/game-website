@@ -112,9 +112,15 @@ def game(id):
             cur_popularity = game[3]
             cur_popularity = cur_popularity + 1
             cur.execute("UPDATE game set popularity = %s where id = %s",(cur_popularity,id,))
+
             #select pictures
-            cur.execute("SELECT * from picture where id = %s",(id,))
-            pictures=[record for record in cur]
+            cur.execute("SELECT picture_id from game_picture where game_id = %s",(id,))
+            pictures_id=[record[0] for record in cur]
+            pictures= []
+            for picture_id in pictures_id:
+                cur.execute("SELECT picturelink from picture where id = %s",(picture_id,))
+                picture = [record[0] for record in cur][0]
+                pictures.append(picture)
 
             #select game tag
             cur.execute("SELECT * from game_tag where game_id = %s",(id,))
