@@ -57,14 +57,16 @@ def callback():
         'picture': userinfo['picture']
     }
 
+    with db.get_db_cursor(True) as cur:
+        cur.execute("SELECT * from reviewer where oauth_id = %s;",(userinfo['sub'],))
+        reviewers = [record for record in cur]
+        #if login not in our database, put in
+        if (len(reviewers) == 0):
+            app.logger.info("Insert in user %s",userinfo['name'])
+            cur.execute("INSERT INTO reviewer (oauth_id,name,avatarlink) values (%s,%s,%s)",(userinfo['sub'],userinfo['name'],userinfo['picture'],))
+
     app.logger.info("The url is  %s",session['return_url'])
     return redirect(session['return_url'])
-
-
-@app.route('/test_auth')
-@require_auth
-def test_auth():
-    return render_template("test_auth.html", profile=session['profile'])
 
 
 ###put render main and review page function here:
@@ -79,17 +81,15 @@ def home():
         #get all possible ratings
         cur.execute("SELECT * from game order by rating DESC limit 10")
         rating_game_list = [record for record in cur]
+        app.logger.info("Inside list is %s %s %s %s %s %s %s %s %s %s",rating_game_list[0][0],rating_game_list[0][1],rating_game_list[0][2],rating_game_list[0][3],rating_game_list[0][4],rating_game_list[0][5],rating_game_list[0][6],rating_game_list[0][7],rating_game_list[0][8],rating_game_list[0][9])
         cur.execute("SELECT * from game order by popularity DESC limit 10")
         popularity_game_list = [record for record in cur]
 
         #select the most recent k reviews
-        k=5
-        cur.execute("SELECT * from review order by timestamp DESC limit %s",(k,))
+        k=10
+        #cur.execute("SELECT * from review order by timestamp DESC limit %s",(k,))
+        cur.execute("SELECT * from review, reviewer where review.reviewer_id=reviewer.id order by timestamp DESC limit %s",(k,))
         reviews = [record for record in cur]
-        cur.execute("SELECT * from review order by timestamp DESC limit %s",(k,))
-        reviews_id = [record[0] for record in cur]
-        if (len(reviews) > k):
-            reviews = reviews[:k]
 
     return render_template('main.html',reviews=reviews,rating_game_list=rating_game_list,popularity_game_list=popularity_game_list,signin = signin)
         # redirect(url_for('home_trie_search',game_list=game_list,reviews=reviews, trie = trie))
@@ -98,17 +98,20 @@ def home():
 @app.route('/<int:id>', methods=['GET'])
 def game(id):
 
-    with db.get_db_cursor() as cur:
+    with db.get_db_cursor(True) as cur:
 
         #first find if game exits in our database and extract game data
         cur.execute("SELECT  * from game where id = %s", (id,))
         #app.logger.info("game name %s",name)
-        games = [record for record in cur]
-        game = games[0]
+        game = [record for record in cur][0]
         #app.logger.info("picture is %s",game[0][0])
         if(len(game) == 0):
             return abort(404)
         else:
+            #modify popularity +1
+            cur_popularity = game[3]
+            cur_popularity = cur_popularity + 1
+            cur.execute("UPDATE game set popularity = %s where id = %s",(cur_popularity,id,))
             #select pictures
 
             #select game tag
