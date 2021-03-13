@@ -39,10 +39,18 @@ def login():
 @app.route('/logout')
 def logout():
     session.clear()
-    #session['return_url'] = request.referrer
-    params = { 'returnTo': request.referrer, 'client_id': os.environ['AUTH0_CLIENT_ID'] }
+    app.logger.info("Return URL is %s",request.referrer)
+    session['return_url'] = request.referrer
+
+    params = { 'returnTo': url_for('callback2', _external=True), 'client_id': os.environ['AUTH0_CLIENT_ID'] }
     # params = { 'returnTo': url_for('home', _external=True), 'client_id': os.environ['AUTH0_CLIENT_ID'] }
     return redirect(auth0().api_base_url + '/v2/logout?' + urlencode(params))
+
+
+@app.route('/callback2')
+def callback2():
+    return redirect(session['return_url'])
+
 
 @app.route('/callback')
 def callback():
@@ -74,8 +82,10 @@ def callback():
 def home():
     if 'profile' in session:
         signin = True
+        avatar = session['profile']["picture"]
     else:
         signin = False
+        avatar = None
 
     with db.get_db_cursor() as cur:
         #get all possible ratings
@@ -91,12 +101,20 @@ def home():
         cur.execute("SELECT * from review, reviewer where review.reviewer_id=reviewer.id order by timestamp DESC limit %s",(k,))
         reviews = [record for record in cur]
 
-    return render_template('main.html',reviews=reviews,rating_game_list=rating_game_list,popularity_game_list=popularity_game_list,signin = signin)
+        # session['search_trie'] = trie.__dict__
+
+    return render_template('main.html',reviews=reviews,rating_game_list=rating_game_list,popularity_game_list=popularity_game_list,signin = signin,avatar = avatar)
         # redirect(url_for('home_trie_search',game_list=game_list,reviews=reviews, trie = trie))
 
 
 @app.route('/<int:id>', methods=['GET'])
 def game(id):
+    if 'profile' in session:
+        signin = True
+        avatar = session['profile']["picture"]
+    else:
+        signin = False
+        avatar = None
 
     with db.get_db_cursor(True) as cur:
 
@@ -133,12 +151,11 @@ def game(id):
             cur.execute("SELECT * from review, reviewer where game_id = %s and review.reviewer_id=reviewer.id order by timestamp DESC",(id,))
             reviews = [record for record in cur]
 
-
             if (len(reviews) > k):
                 reviews = reviews[:k]
 
             #tag is a nested list with count in tag[][1],reviews is a nest list with k reviews
-            return render_template("game.html", game=game,tags=tags,reviews=reviews, pictures=pictures)
+            return render_template("game.html", game=game,tags=tags,reviews=reviews, pictures=pictures,signin = signin,avatar = avatar)
 
             #return render_template("game.html", name=name, picture=game[0][0], video_link= game[0][1],overall_rating=game[0][2],desciption=game[0][3],platform=game[0][4], \
             #tag=tag,reviewer=review[0],title=review[1],content=review[2],review_rating=review[3])
@@ -166,10 +183,21 @@ def search():
 @app.route("/autocomplete", methods=['GET'])
 def search_autocomplete():
     query = request.args.get("query")
+    app.logger.info("zheshi query %s",query)
+
     with db.get_db_cursor() as cur:
-        cur.execute("SELECT name FROM game WHERE name like %s;", ("%"+query+"%", ))
-        results = [x[0] for x in cur]
-        return jsonify(results)
+        trie = Trie()
+        cur.execute("SELECT name from game order by popularity DESC")
+        trie_game_list = [record[0] for record in cur]
+        for i in trie_game_list:
+            trie.insert(i)
+
+        # trie = session['search_trie']
+        # app.logger.info(trie.getData(query))
+    # with db.get_db_cursor() as cur:
+    #     cur.execute("SELECT name FROM game WHERE name like %s;", ("%"+query+"%", ))
+    #     results = [x[0] for x in cur]
+        return jsonify(list(trie.getData(query)))
 
 
 
@@ -184,40 +212,54 @@ def edit_person(id):
         cur.execute("INSERT INTO review (reviewer_id, game_id, timestamp, title, content, rating) VALUES ('18', %s, %s, %s, %s, %s);", (id, timestamp, title, description,rating))
 
         tags = request.form.get("mtag")
-        
-        cur.execute("SELECT tag_id, count, name from game_tag, tag where game_id = %s and id=tag_id",(id,))
-        exist_tag_id = [record[0] for record in cur]
-        tag_count = [record[1] for record in cur]
-        exist_tag_name=[record[2] for record in cur]
-        cur.execute("SELECT count(id) from tag")
-        num_tag=[record[0] for record in cur][0]
-        
-        if tags in exist_tag_name:
-            tag_index = exist_tag_name.index(tags)
+        if tags!=None:
+            cur.execute("SELECT tag_id, count, name from game_tag, tag where game_id = %s and id=tag_id",(id,))
+            exist_tag_id = [record[0] for record in cur]
+            cur.execute("SELECT tag_id, count, name from game_tag, tag where game_id = %s and id=tag_id",(id,))
+            tag_count = [record[1] for record in cur]
+            cur.execute("SELECT tag_id, count, name from game_tag, tag where game_id = %s and id=tag_id",(id,))
+            exist_tag_name = [record[2] for record in cur]
+            cur.execute("SELECT count(id) from tag")
+            num_tag=[record[0] for record in cur][0]
+            tag_index=-1
+            if tags in exist_tag_name:
+                app.logger.info("hello")
+                tag_index = exist_tag_name.index(tags)
+                new_count = tag_count[tag_index] + 1
+                cur.execute("UPDATE game_tag set count = %s where game_id = %s and tag_id = %s",(new_count,id,exist_tag_id[tag_index],))
+            else:
+                new_count = 1
+                cur.execute("INSERT INTO tag (id,name) values (%s,%s)",(num_tag+1,tags,))
+                cur.execute("INSERT INTO game_tag (game_id,tag_id,count) values (%s,%s,%s)",(id,num_tag+1,new_count,))
+
+
+        ptags = request.form.get("ptag")
+        if ptags!= None:
+            cur.execute("SELECT tag_id, count, name from game_tag, tag where game_id = %s and id=tag_id",(id,))
+            exist_tag_id = [record[0] for record in cur]
+            cur.execute("SELECT tag_id, count, name from game_tag, tag where game_id = %s and id=tag_id",(id,))
+            tag_count = [record[1] for record in cur]
+            cur.execute("SELECT tag_id, count, name from game_tag, tag where game_id = %s and id=tag_id",(id,))
+            exist_tag_name = [record[2] for record in cur]
+            cur.execute("SELECT count(id) from tag")
+            num_tag=[record[0] for record in cur][0]
+            tag_index=-1
+            tag_index = exist_tag_name.index(ptags)
             new_count = tag_count[tag_index] + 1
             cur.execute("UPDATE game_tag set count = %s where game_id = %s and tag_id = %s",(new_count,id,exist_tag_id[tag_index],))
+            app.logger.info(ptags)
             
-        else:
-            new_count = 1
-            cur.execute("INSERT INTO tag (id,name) values (%s,%s)",(num_tag+1,tags,))
-            cur.execute("INSERT INTO game_tag (game_id,tag_id,count) values (%s,%s,%s)",(id,num_tag+1,new_count,))
 
-
-
-
-        
-        
-                
+           
 
     
         return redirect(url_for("game", id=id))
 
 @app.route('/<int:id>', methods=['POST'])
 def adding_tag(id):
-
-    
    
         return redirect(url_for("game", id=id))
+
 
 
 #new review:input-review, return to game page
