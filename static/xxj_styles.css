@@ -51,6 +51,11 @@ h1,h2,h3,h4,h5,h6 {
     text-align: left;
 }
 
+.reviewer{display: flex;align-items: center;height: 32px;margin-top: 12px;}
+.reviewer i{display: block;width: 32px;height: 32px;border-radius: 50%;overflow: hidden;}
+.reviewer i img{width: 100%;}
+.reviewer p{margin-left: 15px;color: #373737;}
+
 .review-content{
     text-align: left;
     width: 400px;
@@ -250,7 +255,63 @@ h1,h2,h3,h4,h5,h6 {
 .comment-box {
     margin-left: 20%;
     margin-right: 20%;
+    margin-top: 2%;
 }
+
+.tag-box {
+    margin-left: 20%;
+    margin-right: 20%;
+    display: flex;
+}
+
+.tag1 {flex:20%;}
+.tag2 {flex:20%;}
+.tag3 {flex:20%;}
+.tag4 {flex:20%;}
+.tag5 {flex:20%;}
+
+
+div label input {
+    margin-right:100px;
+ }
+ body {
+     font-family:sans-serif;
+ }
+ 
+ #ck-button {
+     margin:4px;
+     background-color:#EFEFEF;
+     border-radius:4px;
+     border:1px solid #D0D0D0;
+     overflow:auto;
+     float:left;
+ }
+ 
+ #ck-button:hover {
+     background:grey;
+ }
+ 
+ #ck-button label {
+     float:left;
+     width:4.0em;
+ }
+ 
+ #ck-button label span {
+     text-align:center;
+     padding:3px 0px;
+     display:block;
+ }
+ 
+ #ck-button label input {
+     position:absolute;
+     top:-20px;
+ }
+ 
+ #ck-button input:checked + span {
+     background-color: grey;
+     color:#fff;
+ }
+
 
 .container {
     width: 200px;

@@ -123,7 +123,7 @@ def game(id):
                 pictures.append(picture)
 
             #select game tag
-            cur.execute("SELECT * from game_tag where game_id = %s",(id,))
+            cur.execute("SELECT * from game_tag, tag where game_id = %s and tag_id=id" ,(id,))
             tags = [record for record in cur]
 
             #may need to consider here is there is no tag
@@ -175,12 +175,48 @@ def search_autocomplete():
 
 @app.route('/<int:id>', methods=['POST'])
 def edit_person(id):
+    title = request.form.get("title")
     description = request.form.get("description")
     rating = request.form.get("rating")
     ts=time.time()
     timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
     with db.get_db_cursor(True) as cur:
-        cur.execute("INSERT INTO review (reviewer_id, game_id, timestamp, title, content, rating) VALUES ('18', %s, %s, 'hello', %s, %s);", (id, timestamp, description,rating))
+        cur.execute("INSERT INTO review (reviewer_id, game_id, timestamp, title, content, rating) VALUES ('18', %s, %s, %s, %s, %s);", (id, timestamp, title, description,rating))
+
+        tags = request.form.get("mtag")
+        
+        cur.execute("SELECT tag_id, count, name from game_tag, tag where game_id = %s and id=tag_id",(id,))
+        exist_tag_id = [record[0] for record in cur]
+        tag_count = [record[1] for record in cur]
+        exist_tag_name=[record[2] for record in cur]
+        cur.execute("SELECT count(id) from tag")
+        num_tag=[record[0] for record in cur][0]
+        
+        if tags in exist_tag_name:
+            tag_index = exist_tag_name.index(tags)
+            new_count = tag_count[tag_index] + 1
+            cur.execute("UPDATE game_tag set count = %s where game_id = %s and tag_id = %s",(new_count,id,exist_tag_id[tag_index],))
+            
+        else:
+            new_count = 1
+            cur.execute("INSERT INTO tag (id,name) values (%s,%s)",(num_tag+1,tags,))
+            cur.execute("INSERT INTO game_tag (game_id,tag_id,count) values (%s,%s,%s)",(id,num_tag+1,new_count,))
+
+
+
+
+        
+        
+                
+
+    
+        return redirect(url_for("game", id=id))
+
+@app.route('/<int:id>', methods=['POST'])
+def adding_tag(id):
+
+    
+   
         return redirect(url_for("game", id=id))
 
 
