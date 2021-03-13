@@ -141,7 +141,7 @@ def game(id):
                 pictures.append(picture)
 
             #select game tag
-            cur.execute("SELECT * from game_tag where game_id = %s",(id,))
+            cur.execute("SELECT * from game_tag, tag where game_id = %s and tag_id=id" ,(id,))
             tags = [record for record in cur]
 
             #may need to consider here is there is no tag
@@ -207,19 +207,63 @@ def search_autocomplete():
 
 @app.route('/<int:id>', methods=['POST'])
 def edit_person(id):
-    profile=session['profile']
-    app.logger.info("The profile is %s", profile)
+    title = request.form.get("title")
+    description = request.form.get("description")
+    rating = request.form.get("rating")
+    ts=time.time()
+    timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
     with db.get_db_cursor(True) as cur:
-        cur.execute("SELECT id from reviewer where oauth_id = %s;",(profile["user_id"],))
-        reviewer_id = [record[0] for record in cur][0]
-        app.logger.info("Reviewer ID is %s", reviewer_id)
-        description = request.form.get("description")
-        rating = request.form.get("rating")
-        ts=time.time()
-        timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
-        cur.execute("INSERT INTO review (reviewer_id, game_id, timestamp, title, content, rating) VALUES (%s, %s, %s, 'hello', %s, %s);", (reviewer_id, id,timestamp, description,rating,))
+        cur.execute("INSERT INTO review (reviewer_id, game_id, timestamp, title, content, rating) VALUES ('18', %s, %s, %s, %s, %s);", (id, timestamp, title, description,rating))
 
-    return redirect(url_for("game", id=id))
+        tags = request.form.get("mtag")
+        if tags!=None:
+            cur.execute("SELECT tag_id, count, name from game_tag, tag where game_id = %s and id=tag_id",(id,))
+            exist_tag_id = [record[0] for record in cur]
+            cur.execute("SELECT tag_id, count, name from game_tag, tag where game_id = %s and id=tag_id",(id,))
+            tag_count = [record[1] for record in cur]
+            cur.execute("SELECT tag_id, count, name from game_tag, tag where game_id = %s and id=tag_id",(id,))
+            exist_tag_name = [record[2] for record in cur]
+            cur.execute("SELECT count(id) from tag")
+            num_tag=[record[0] for record in cur][0]
+            tag_index=-1
+            if tags in exist_tag_name:
+                app.logger.info("hello")
+                tag_index = exist_tag_name.index(tags)
+                new_count = tag_count[tag_index] + 1
+                cur.execute("UPDATE game_tag set count = %s where game_id = %s and tag_id = %s",(new_count,id,exist_tag_id[tag_index],))
+            else:
+                new_count = 1
+                cur.execute("INSERT INTO tag (id,name) values (%s,%s)",(num_tag+1,tags,))
+                cur.execute("INSERT INTO game_tag (game_id,tag_id,count) values (%s,%s,%s)",(id,num_tag+1,new_count,))
+
+
+        ptags = request.form.get("ptag")
+        if ptags!= None:
+            cur.execute("SELECT tag_id, count, name from game_tag, tag where game_id = %s and id=tag_id",(id,))
+            exist_tag_id = [record[0] for record in cur]
+            cur.execute("SELECT tag_id, count, name from game_tag, tag where game_id = %s and id=tag_id",(id,))
+            tag_count = [record[1] for record in cur]
+            cur.execute("SELECT tag_id, count, name from game_tag, tag where game_id = %s and id=tag_id",(id,))
+            exist_tag_name = [record[2] for record in cur]
+            cur.execute("SELECT count(id) from tag")
+            num_tag=[record[0] for record in cur][0]
+            tag_index=-1
+            tag_index = exist_tag_name.index(ptags)
+            new_count = tag_count[tag_index] + 1
+            cur.execute("UPDATE game_tag set count = %s where game_id = %s and tag_id = %s",(new_count,id,exist_tag_id[tag_index],))
+            app.logger.info(ptags)
+            
+
+           
+
+    
+        return redirect(url_for("game", id=id))
+
+@app.route('/<int:id>', methods=['POST'])
+def adding_tag(id):
+   
+        return redirect(url_for("game", id=id))
+
 
 
 #new review:input-review, return to game page
