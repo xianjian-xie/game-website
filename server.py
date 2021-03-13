@@ -183,7 +183,10 @@ def search():
 @app.route("/autocomplete", methods=['GET'])
 def search_autocomplete():
     query = request.args.get("query")
-    app.logger.info("zheshi query %s",query)
+    app.logger.info("query is %s",query)
+
+    # if query == "":
+    #     return jsonify([])
 
     with db.get_db_cursor() as cur:
         trie = Trie()
@@ -197,6 +200,7 @@ def search_autocomplete():
     # with db.get_db_cursor() as cur:
     #     cur.execute("SELECT name FROM game WHERE name like %s;", ("%"+query+"%", ))
     #     results = [x[0] for x in cur]
+        app.logger.info("return is %s",list(trie.getData(query)))
         return jsonify(list(trie.getData(query)))
 
 
