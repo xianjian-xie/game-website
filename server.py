@@ -147,7 +147,7 @@ def game(id):
             #may need to consider here is there is no tag
 
             #select the most recent k reviews for the game
-            k=10
+            k=3
             cur.execute("SELECT * from review, reviewer where game_id = %s and review.reviewer_id=reviewer.id order by timestamp DESC",(id,))
             reviews = [record for record in cur]
 
@@ -205,18 +205,23 @@ def search_autocomplete():
 
 
 
+
+
 @app.route('/<int:id>', methods=['POST'])
 def edit_person(id):
+    
+    
     title = request.form.get("title")
     description = request.form.get("description")
     rating = request.form.get("rating")
     ts=time.time()
     timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
     with db.get_db_cursor(True) as cur:
-        cur.execute("INSERT INTO review (reviewer_id, game_id, timestamp, title, content, rating) VALUES ('18', %s, %s, %s, %s, %s);", (id, timestamp, title, description,rating))
+        if title!="" and title!=None:
+            cur.execute("INSERT INTO review (reviewer_id, game_id, timestamp, title, content, rating) VALUES (%s, %s, %s, %s, %s, %s);", ('20',id, timestamp, title, description,rating))
 
         tags = request.form.get("mtag")
-        if tags!=None:
+        if tags!=None and tags!="":
             cur.execute("SELECT tag_id, count, name from game_tag, tag where game_id = %s and id=tag_id",(id,))
             exist_tag_id = [record[0] for record in cur]
             cur.execute("SELECT tag_id, count, name from game_tag, tag where game_id = %s and id=tag_id",(id,))

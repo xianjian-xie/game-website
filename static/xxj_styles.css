@@ -39,6 +39,7 @@ h1,h2,h3,h4,h5,h6 {
     margin-right:20%;
 }
 
+
 .review-title{
     text-align: left;
 }
@@ -223,26 +224,35 @@ h1,h2,h3,h4,h5,h6 {
     background-color: #cecece transparent transparent;
     display: flex;
     flex-wrap: wrap;
+    margin-top: 150px;
     
     
     
 }
 
 
-.left-box-s {
-    
+.left-box-s { 
     padding: 10px;
     flex: 55%; 
     align-items: center;
-    
+}
+
+.left-box-s h1{ 
+    text-align: left;
+    margin-left: 18%;
 }
 
 .right-box-s {
     
     padding: 10px;
-    flex: 30%;
-    
-    
+    flex: 30%; 
+    margin-top: 40px; 
+}
+
+.right-box-s p {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
 }
 .rright-box-s {
    
