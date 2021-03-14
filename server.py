@@ -241,9 +241,9 @@ def new_review(id):
             overall_rating = (overall_rating*review_number + int(rating))/(review_number+1)
             cur.execute("UPDATE game set rating = %s, review_number = %s where id = %s",(overall_rating,review_number+1,id,))
 
-        #update tag
-        tags = request.form.get("existingtag")
-        if tags!=None and tags!="":
+        #update tag, tags is a string contains tag
+        tags = request.form.get("tag")
+        if tags!=None and tags !="":
             cur.execute("SELECT tag_id, count, name from game_tag, tag where game_id = %s and id=tag_id",(id,))
             exist_tag_id = [record[0] for record in cur]
             cur.execute("SELECT tag_id, count, name from game_tag, tag where game_id = %s and id=tag_id",(id,))
@@ -253,15 +253,20 @@ def new_review(id):
             cur.execute("SELECT count(id) from tag")
             num_tag=[record[0] for record in cur][0]
             tag_index=-1
-            if tags in exist_tag_name:
-                app.logger.info("hello")
-                tag_index = exist_tag_name.index(tags)
-                new_count = tag_count[tag_index] + 1
-                cur.execute("UPDATE game_tag set count = %s where game_id = %s and tag_id = %s",(new_count,id,exist_tag_id[tag_index],))
-            else:
-                new_count = 1
-                cur.execute("INSERT INTO tag (id,name) values (%s,%s)",(num_tag+1,tags,))
-                cur.execute("INSERT INTO game_tag (game_id,tag_id,count) values (%s,%s,%s)",(id,num_tag+1,new_count,))
+
+            tag_list = tags.split()
+            for tag in tag_list:
+                app.logger.info("Tag is %s",tag)
+                if tag in exist_tag_name:
+                    app.logger.info("hello")
+                    tag_index = exist_tag_name.index(tag)
+                    new_count = tag_count[tag_index] + 1
+                    cur.execute("UPDATE game_tag set count = %s where game_id = %s and tag_id = %s",(new_count,id,exist_tag_id[tag_index],))
+                else:
+                    new_count = 1
+                    cur.execute("INSERT INTO tag (id,name) values (%s,%s)",(num_tag+1,tag,))
+                    cur.execute("INSERT INTO game_tag (game_id,tag_id,count) values (%s,%s,%s)",(id,num_tag+1,new_count,))
+                    num_tag = num_tag +1;
 
         return redirect(url_for("game", id=id))
 
