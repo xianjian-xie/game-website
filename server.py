@@ -224,6 +224,9 @@ def search_autocomplete():
 
 @app.route('/<int:id>', methods=['POST'])
 def edit_person(id):
+    userinfo=session['profile']
+    app.logger.info(userinfo)
+    name1=userinfo['name']
     
     
     title = request.form.get("title")
@@ -233,7 +236,9 @@ def edit_person(id):
     timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
     with db.get_db_cursor(True) as cur:
         if title!="" and title!=None:
-            cur.execute("INSERT INTO review (reviewer_id, game_id, timestamp, title, content, rating) VALUES (%s, %s, %s, %s, %s, %s);", ('20',id, timestamp, title, description,rating))
+            cur.execute("SELECT id from reviewer where name = %s",(name1,))
+            reviewer_id=[record[0] for record in cur][0]
+            cur.execute("INSERT INTO review (reviewer_id, game_id, timestamp, title, content, rating) VALUES (%s, %s, %s, %s, %s, %s);", (reviewer_id,id, timestamp, title, description,rating))
 
         tags = request.form.get("mtag")
         if tags!=None and tags!="":
