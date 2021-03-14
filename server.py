@@ -142,7 +142,8 @@ def game(id):
                 pictures.append(picture)
 
             #select game tag
-            cur.execute("SELECT * from game_tag, tag where game_id = %s and tag_id=id" ,(id,))
+            m = 3
+            cur.execute("SELECT * from game_tag, tag where game_id = %s and tag_id=id order by count DESC limit %s" ,(id,m,))
             tags = [record for record in cur]
 
             #select the most recent k reviews for the game
@@ -225,21 +226,43 @@ def new_review(id):
         rid = request.form.get("dr")
         app.logger.info(rid)
         if rid!=None and rid!="":
+            #get necessary information before we delete review
+            cur.execute("SELECT game_id, rating from review where id = %s",(rid,))
+            game_id = [record[0] for record in cur][0]
+            cur.execute("SELECT game_id, rating from review where id = %s",(rid,))
+            rating = [record[1] for record in cur][0]
+
+            #delete review
             cur.execute("DELETE FROM review WHERE id=%s;",(rid,))
+
+            #update overallrating
+            cur.execute("SELECT rating, review_number from game where id = %s",(game_id,))
+            overall_rating = [record[0] for record in cur][0]
+            cur.execute("SELECT rating, review_number from game where id = %s",(game_id,))
+            review_number = [record[1] for record in cur][0]
+            app.logger.info("data is %s,%s,%s,%s",game_id,rating,overall_rating,review_number)
+            if review_number == 1:
+                overall_rating = 0
+            else:
+                overall_rating = round((overall_rating*review_number - rating)/(review_number-1),2)
+            cur.execute("UPDATE game set rating = %s, review_number = %s where id = %s",(overall_rating,review_number-1,game_id,))
+            # cur.execute("UPDATE game set rating = %s, review_number = %s where id = %s",(overall_rating,review_number+1,id,))
+
+        #update overall rating in game table
+        elif rating != None and rating != "":
+            cur.execute("SELECT rating, review_number from game where id = %s",(id,))
+            overall_rating = [record[0] for record in cur][0]
+            cur.execute("SELECT rating, review_number from game where id = %s",(id,))
+            review_number = [record[1] for record in cur][0]
+            overall_rating = round((overall_rating*review_number + int(rating))/(review_number+1),2)
+            cur.execute("UPDATE game set rating = %s, review_number = %s where id = %s",(overall_rating,review_number+1,id,))
 
         if title!="" and title!=None:
             cur.execute("SELECT id from reviewer where oauth_id = %s",(oauth_id,))
             reviewer_id=[record[0] for record in cur][0]
             cur.execute("INSERT INTO review (reviewer_id, game_id, timestamp, title, content, rating) VALUES (%s, %s, %s, %s, %s, %s);", (reviewer_id,id, timestamp, title, description,rating,))
 
-        #update overall rating in game table
-        if rating != None and rating != "":
-            cur.execute("SELECT rating, review_number from game where id = %s",(id,))
-            overall_rating = [record[0] for record in cur][0]
-            cur.execute("SELECT rating, review_number from game where id = %s",(id,))
-            review_number = [record[1] for record in cur][0]
-            overall_rating = (overall_rating*review_number + int(rating))/(review_number+1)
-            cur.execute("UPDATE game set rating = %s, review_number = %s where id = %s",(overall_rating,review_number+1,id,))
+
 
         #update tag, tags is a string contains tag
         tags = request.form.get("tag")

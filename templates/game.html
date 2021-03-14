@@ -94,26 +94,21 @@
     <br>
     <div class="container">
       <p>Rating:<span class="stars">{{game[4]}}</span></p>
-    </div>
-    <div class="container">
       <p>Popular tags:</p>
       <div class="pure-menu pure-menu-horizontal">
-    <a href="#" class="pure-menu-heading pure-menu-link">BRAND</a>
     <ul class="pure-menu-list">
-        <li class="pure-menu-item">
-            <a href="#" class="pure-menu-link">News</a>
-        </li>
-        <li class="pure-menu-item">
-            <a href="#" class="pure-menu-link">Sports</a>
-        </li>
-        <li class="pure-menu-item">
-            <a href="#" class="pure-menu-link">Finance</a>
-        </li>
-    </ul>
-</div>
 
+        {% for tag in tags %}
+        <li class="pure-menu-item">
+            <a href="javascript:void(0)" class="pure-menu-link">{{tag[4]}}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    </div>
 
     </div>
+
+
 
   </div>
   <div class="rright-box-s">
@@ -191,6 +186,8 @@
       </div>
 
       <form  action="{{ url_for("new_review", id=game[0]) }}" method="POST">
+        <!-- style="display:none;" -->
+        <input  style="display:none;" type="text" id="tag" name="tag">
         <div class="rating-box">
           <div class="rating-h-box">
             <p for="rating">Your rating score:</p>
@@ -237,25 +234,30 @@
 </div>
 
 
-
-
-<script>
+  <script>
   var div = document.getElementById('tag-box');
+  var hiddeninput = document.getElementById('tag');
   function addTag() {
     console.log("addTag")
-    button = document.createElement('button');
-    button.setAttribute("id", "existingtag");
-    // button.innerHTML = 'X';
-    button.innerHTML = document.getElementById("tagname").value;
-    // button.value = document.getElementById("tagname").value;
-    // attach onlick event handler to remove button
-    button.onclick = removeTag;
-    div.appendChild(button);
+      if (document.getElementById("tagname").value) {
+      button = document.createElement('button');
+      button.setAttribute("id", "existingtag");
+      // button.innerHTML = 'X';
+      button.innerHTML = document.getElementById("tagname").value;
+      button.value = document.getElementById("tagname").value;
+      hiddeninput.value = hiddeninput.value +" " + document.getElementById("tagname").value;
+
+      // attach onlick event handler to remove button
+      button.onclick = removeTag;
+      div.appendChild(button);
+      document.getElementById("tagname").value = "";
+    }
   }
 
   function removeTag() {
     // remove this button and its input
     div.removeChild(this);
+    hiddeninput.value = hiddeninput.value.replace(' '+this.value,'');
   }
 
   document.getElementById('addtag').addEventListener('click', addTag);
