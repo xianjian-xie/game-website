@@ -4,6 +4,7 @@
 }
 
 .searchB-inp-wrap {
+    height: 80px;
     width: 784px;
     border-radius: 6px;
     display: flex;
@@ -136,7 +137,7 @@
 }
 
 .evaluateB-li-l {
-    width: 532px;
+    width: 400px;
 }
 
 .evaluateB-li-l-title {
@@ -166,9 +167,10 @@
 
 .evaluateB-li-l-user {
     display: flex;
-    align-items: center;
+    align-items: right;
     height: 32px;
-    margin-top: 12px;
+    margin-top: 6px;
+    margin-right: 6px;
 }
 
 .evaluateB-li-l-user i {
@@ -227,13 +229,13 @@
     width: 17px;
     height: 15px;
     background-size: auto 100%;
-    background-image: url(../images/star.png);
+    background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/747/star.svg);
     background-position: center;
     background-repeat: no-repeat;
 }
 
 .evaluateB-star-list .light-star {
-    background-image: url(../images/light-star.png);
+    background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/747/star.svg);
 }
 
 .more {
@@ -436,4 +438,18 @@
 .infoB .give {
     background-image: url(../images/give.png);
     margin-left: 26px;
+}
+
+
+span.stars, span.stars span {
+  display: block;
+  background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/747/star-o-white.svg) 0 0 repeat-x;
+  width: 100px; /* width of a star multiplied by 5 */
+  height: 20px; /* the height of the star */
+  background-size: 20px 20px;
+}
+
+span.stars span {
+  background-position: 0 0;
+  background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/747/star.svg);
 }

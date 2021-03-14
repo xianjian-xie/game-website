@@ -12,6 +12,7 @@ class Trie:
         """
         self.root = TrieNode()
         self.returnlist = []
+
     def insert(self, word: str) -> None:
         """
         Inserts a word into the trie.
@@ -26,30 +27,23 @@ class Trie:
 
         node.word = True
 
-    # def search(self, word: str) -> bool:
-    #     """
-    #     Returns if the word is in the trie.
-    #     """
-    #     node = self.root
-    #     for i in range(len(word)):
-    #         if word[i] not in node.children:
-    #             return False
-    #         node = node.children[word[i]]
-
-    #     return node.word
-
     def startsWith(self, prefix: str) -> bool:
         """
         Returns if there is any word in the trie that starts with the given prefix.
         """
         node = self.root
         for i in range(len(prefix)):
-            if prefix[i] not in node.children:
+            if prefix[i].lower() not in node.children and prefix[i].upper() not in node.children:
                 return False
-            node = node.children[prefix[i]]
+
+            if prefix[i] in node.children:
+                node = node.children[prefix[i]]
+            elif prefix[i].lower() in node.children:
+                node = node.children[prefix[i].lower()]
+            elif prefix[i].upper() in node.children:
+                node = node.children[prefix[i].upper()]
 
         return True
-
 
     def getData(self, word: str):
         self.returnlist.clear()
@@ -58,12 +52,35 @@ class Trie:
         else:
             node = self.root
             curlist = []
-            for i in range(len(word)):
-                node = node.children[word[i]]
-                curlist.append(word[i])
-            self.backtracking(node, curlist)
+            self.word_backtracking(node, curlist, word, 0)
 
         return self.returnlist
+
+    def word_backtracking(self, node, curlist, word, index):
+        if index == len(word):
+            self.backtracking(node, curlist)
+
+        for i in range(index, len(word)):
+
+            if word[i] in node.children.keys():
+                temp_node = node.children[word[i]]
+                curlist.append(word[i])
+                self.word_backtracking(temp_node, curlist, word, i + 1)
+                curlist.pop()
+
+            if word[i].lower() in node.children.keys() and word[i].lower() != word[i]:
+                temp_node = node.children[word[i].lower()]
+                curlist.append(word[i].lower())
+                self.word_backtracking(temp_node, curlist, word, i + 1)
+                curlist.pop()
+
+            if word[i].upper() in node.children.keys() and word[i].upper() != word[i]:
+                temp_node = node.children[word[i].upper()]
+                curlist.append(word[i].upper())
+                self.word_backtracking(temp_node, curlist, word, i + 1)
+                curlist.pop()
+
+            break
 
     def backtracking(self, node, curlist):
         if node.word:

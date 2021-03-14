@@ -7,128 +7,161 @@
 <script type="text/javascript" src="/static/js/jquery-1.8.3.min.js"></script>
 <link href="/static/style.css" rel="stylesheet" type="text/css" />
 <link href="/static/index.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="static/search-box.css"/>
+<link rel="stylesheet" href="https://unpkg.com/purecss@2.0.5/build/pure-min.css" integrity="sha384-LTIDeidl25h2dPxrB2Ekgc9c7sEC3CWGM6HeFmuDNUjX76Ert4Z4IY714dhZHPLd" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="static/autocomplete.js" ></script>
+<script src="static/see-more.js"></script>
+<script src="static/sortgame.js"></script>
+<script src="static/ui.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+<script>
+	// Set this to the width of one star.
+var starWidth = 20;
+
+$.fn.stars = function() {
+return $(this).each(function() {
+	$(this).html($('<span />').width(Math.max(0, (Math.min(5, parseFloat($(this).html())))) * starWidth));
+});
+}
+$(document).ready(function() {
+$('span.stars').stars();
+});
+</script>
+
+
 </head>
 <body>
 
+{% if signin == True %}
 <div class="header">
 	<div class="hdDk">
-		<h2 class="logo"><a href="javascript:;"><img src="/static/images/logo.png"></a></h2>
-		<a href="javascript:;" class="signA"><i><img src="/static/images/sign-icon.png"></i><span>Sign in</span></a>
+		<h2 class="logo"><a href="{{ url_for("home") }}"><img src="/static/images/logo.png"></a></h2>
+		<a href="{{ url_for("logout") }}" class="signA"><div class="evaluateB-li-l-user"><i> <img src={{avatar}}>	</i></div> <span> Log out</span></a>
 	</div>
 </div>
 
-<div class="mainB">
+{% else %}
 
+<div class="header">
+	<div class="hdDk">
+		<h2 class="logo"><a href="{{ url_for("home") }}"><img src="/static/images/logo.png"></a></h2>
+		<a href="{{ url_for("login") }}" class="signA"><i><img src="/static/images/sign-icon.png"></i><span>Sign in</span></a>
+	</div>
+</div>
+
+{% endif %}
+
+
+
+<div class="mainB">
+<form class="pure-form pure-form-stacked" action="{{ url_for("search") }}" method="GET">
 	<div class="searchB">
 		<div class="searchB-inp-wrap">
-			<div class="inpB">
-				<input type="text" name="search" class="inp" placeholder="What Game Are you looking for">
+			<!-- <div class="inpB">
+				<input type="text" name="name" class="inp" placeholder="What Game Are you looking for">
+			</div> -->
+			<div class="inpB top-search-box" id="layout">
+						<input type="text" name="global" id="global" class="inp" placeholder="What Game Are you looking for" />
+						<ul id="list"></ul>
 			</div>
-			<a href="javascript:;" class="btn-search">search</a>
-		</div>
-		<div class="hotB">
-			<p>Hot Search: </p>
-			<ul class="hotB-ul">
-				<li><a href="javascript:;">only wolves</a></li>
-				<li><a href="javascript:;">two shades of grey</a></li>
-				<li><a href="javascript:;">humans wiped out</a></li>
-				<li><a href="javascript:;">humans wiped out</a></li>
-			</ul>
+
+			<button type="submit" id="search-button" class="pure-button pure-button-primary">search</button>
 		</div>
 	</div>
+</form>
 
-	<div class="result-title"><p>57 <span>relevant search result</span></p></div>
+
+
+	<div class="result-title"><p>{{games|length}} <span>relevant search result</span></p></div>
+
 
 	<div class="listB">
-    {% for game in games %}
-		<div class="list-l result-l">
-			<div class="resultB">
-				<ul class="resultB-ul">
-					<li class="resultB-li">
-						<!-- <div class="resultB-img"><img src={{picture}}></div> -->
-						<div class="resultB-content">
-							<h3> <a href="{{ url_for("game", id=game[0]) }}"> {{game[1]}} </a> </h3>
-							<h5 class="evaluateB-li-l-desc resultB-li-l-desc"> {{game[5]}} </h5>
-							<p class="infoB">
-								<span class="message">2536</span>
-								<span class="give">620</span>
-							</p>
+		<div class="list-l list-common">
+			<div class="evaluateB">
+				<ul class="evaluateB-ul">
+
+          {% for game in games %}
+
+					<li class="evaluateB-li">
+						<div class="evaluateB-pic">
+							<a href="/{{game[0]}}" class="recommendB-li-a">
+								<div class="recommendB-li-img enlarge"><img src={{game[9]}}></div>
+							</a>
+						</div>
+
+						<div class="evaluateB-li-l">
+							<h3 class="evaluateB-li-l-title">{{game[1]}}</h3>
+							<h5 class="evaluateB-li-l-desc">{{game[8]}}</h5>
+						</div>
+						<div class="evaluateB-star-r">
+							<span class="stars">{{game[4]}}</span>
+
 						</div>
 					</li>
+          {% endfor %}
 				</ul>
+
 			</div>
+			<a href="javascript:;" class="more">See more ></a>
 		</div>
-    {% endfor %}
 
 		<div class="list-r list-common">
-			<h2 class="title">Ranking（with sort）<span class="sort">sort</span></h2>
-			<div class="recommendB">
+			<h2 class="title">Ranking
+				<span class="sort">sort by
+					<select id="selectBox" onchange="hiddenshow();">
+						<option value="1">Popularity</option>
+							<option value="2">Rating</option>
+						</select>
+					</span>
+					</h2>
+
+
+				<div class="recommendB" id = "popularity_list">
+					<ul class="recommendB-ul">
+						{% for game in popularity_game_list %}
+						<li class="recommendB-li">
+							<a href="/{{game[0]}}" class="recommendB-li-a">
+								<div class="recommendB-li-img enlarge"><img src={{game[9]}}><i class="color-one">{{loop.index}}</i></div>
+								<div class="recommendB-li-r-box">
+									<h3 class="evaluateB-li-l-title">{{game[1]}}</h3>
+									<h5 class="recommendB-li-r-desc">{{game[7]}}</h5>
+								</div>
+							</a>
+						</li>
+
+						{% endfor %}
+
+					</ul>
+				</div>
+
+
+			<div class="recommendB" id = "rating_list" style= "display:none">
 				<ul class="recommendB-ul">
+
+					{% for game in rating_game_list %}
+
 					<li class="recommendB-li">
-						<a href="javascript:;" class="recommendB-li-a">
-							<div class="recommendB-li-img enlarge"><img src="/static/images/recommend01.jpg"><i class="color-one">1</i></div>
+						<a href="/{{game[0]}}" class="recommendB-li-a">
+							<div class="recommendB-li-img enlarge"><img src={{game[9]}}><i class="color-one">{{loop.index}}</i></div>
 							<div class="recommendB-li-r-box">
-								<h3 class="evaluateB-li-l-title">Valheim</h3>
-								<h5 class="recommendB-li-r-desc">Action,Adventure,RPG,Superhero,Multiplayer ,Online World,Cinematic</h5>
+								<h3 class="evaluateB-li-l-title">{{game[1]}}</h3>
+								<h5 class="recommendB-li-r-desc">{{game[7]}}</h5>
 							</div>
 						</a>
 					</li>
-					<li class="recommendB-li">
-						<a href="javascript:;" class="recommendB-li-a">
-							<div class="recommendB-li-img enlarge"><img src="/static/images/recommend02.jpg"><i class="color-two">2</i></div>
-							<div class="recommendB-li-r-box">
-								<h3 class="evaluateB-li-l-title">Marvel’s Avengers</h3>
-								<h5 class="recommendB-li-r-desc">Action,Adventure,RPG,Superhero,Multiplayer ,Online World,Cinematic</h5>
-							</div>
-						</a>
-					</li>
-					<li class="recommendB-li">
-						<a href="javascript:;" class="recommendB-li-a">
-							<div class="recommendB-li-img enlarge"><img src="/static/images/recommend03.jpg"><i class="color-three">3</i></div>
-							<div class="recommendB-li-r-box">
-								<h3 class="evaluateB-li-l-title">Valheim</h3>
-								<h5 class="recommendB-li-r-desc">Action,Adventure,RPG,Superhero,Multiplayer ,Online World,Cinematic</h5>
-							</div>
-						</a>
-					</li>
-					<li class="recommendB-li">
-						<a href="javascript:;" class="recommendB-li-a">
-							<div class="recommendB-li-img enlarge"><img src="/static/images/recommend04.jpg"><i>4</i></div>
-							<div class="recommendB-li-r-box">
-								<h3 class="evaluateB-li-l-title">Craftopia</h3>
-								<h5 class="recommendB-li-r-desc">Action,Adventure,RPG,Superhero,Multiplayer ,Online World,Cinematic</h5>
-							</div>
-						</a>
-					</li>
-					<li class="recommendB-li">
-						<a href="javascript:;" class="recommendB-li-a">
-							<div class="recommendB-li-img enlarge"><img src="/static/images/recommend05.jpg"><i>5</i></div>
-							<div class="recommendB-li-r-box">
-								<h3 class="evaluateB-li-l-title">WORLD WAR Z</h3>
-								<h5 class="recommendB-li-r-desc">Action,Adventure,RPG,Superhero,Multiplayer ,Online World,Cinematic</h5>
-							</div>
-						</a>
-					</li>
-					<li class="recommendB-li">
-						<a href="javascript:;" class="recommendB-li-a">
-							<div class="recommendB-li-img enlarge"><img src="/static/images/recommend06.jpg"><i>6</i></div>
-							<div class="recommendB-li-r-box">
-								<h3 class="evaluateB-li-l-title">Cities: Skylines</h3>
-								<h5 class="recommendB-li-r-desc">Action,Adventure,RPG,Superhero,Multiplayer ,Online World,Cinematic</h5>
-							</div>
-						</a>
-					</li>
-					<li class="recommendB-li">
-						<a href="javascript:;" class="recommendB-li-a">
-							<div class="recommendB-li-img enlarge"><img src="/static/images/recommend01.jpg"><i>7</i></div>
-							<div class="recommendB-li-r-box">
-								<h3 class="evaluateB-li-l-title">Valheim</h3>
-								<h5 class="recommendB-li-r-desc">Action,Adventure,RPG,Superhero,Multiplayer ,Online World,Cinematic</h5>
-							</div>
-						</a>
-					</li>
+
+					{% endfor %}
+
 				</ul>
 			</div>
+
+
+
+
+
 		</div>
 	</div>
 </div>
@@ -138,18 +171,11 @@
 	$(function(){
 		$('.mainB').css({'padding-top':parseFloat($('.header').height())});
 
-		var resultBH = $('.resultB').outerHeight();
-		$('.result-l').height(resultBH);
 		/*$(".evaluate-box-starB span").click(function() {
             $(this).addClass("light-star");
             $(this).prevAll().addClass("light-star");
             $(this).nextAll().removeClass("light-star");
         });*/
-
-        $('.give').click(function(){
-        	$(this).html();
-        	console.log($(this).html());
-        })
 	})
 </script>
 
