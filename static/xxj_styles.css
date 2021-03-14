@@ -15,7 +15,7 @@ h1,h2,h3,h4,h5,h6 {
 .review-box {
     display: flex;
     margin-bottom: 50px;
-    
+
 }
 
 .left-box {
@@ -64,7 +64,7 @@ h1,h2,h3,h4,h5,h6 {
     text-align: left;
     width: 400px;
     height: auto;
-    
+
 }
 
 .review-content img{
@@ -103,7 +103,7 @@ h1,h2,h3,h4,h5,h6 {
     position: relative;
     height: auto;
     text-align: center;
-} 
+}
 
 .photo-box-thin {
     height: 120px;
@@ -223,33 +223,33 @@ h1,h2,h3,h4,h5,h6 {
 
 
 .container-s {
-    
+
     background-color: #cecece transparent transparent;
     display: flex;
     flex-wrap: wrap;
     margin-top: 150px;
-    
-    
-    
+
+
+
 }
 
 
-.left-box-s { 
+.left-box-s {
     padding: 10px;
-    flex: 55%; 
+    flex: 55%;
     align-items: center;
 }
 
-.left-box-s h1{ 
+.left-box-s h1{
     text-align: left;
     margin-left: 18%;
 }
 
 .right-box-s {
-    
+
     padding: 10px;
-    flex: 30%; 
-    margin-top: 40px; 
+    flex: 30%;
+    margin-top: 40px;
 }
 
 .right-box-s p {
@@ -258,11 +258,11 @@ h1,h2,h3,h4,h5,h6 {
     line-height: 1.6;
 }
 .rright-box-s {
-   
+
     padding: 10px;
     flex: 15%;
-    
-    
+
+
 }
 
 .comment-box {
@@ -291,7 +291,7 @@ div label input {
  body {
      font-family:sans-serif;
  }
- 
+
  #ck-button {
      margin:4px;
      background-color:#EFEFEF;
@@ -300,31 +300,31 @@ div label input {
      overflow:auto;
      float:left;
  }
- 
+
  #ck-button:hover {
      background:grey;
  }
- 
+
  #ck-button label {
      float:left;
-     
+
  }
- 
+
  #ck-button label span {
      text-align:center;
      padding:3px 0px;
      display:block;
  }
- 
+
  #ck-button label input {
      position:absolute;
      top:-20px;
  }
- 
+
  #ck-button input:checked + span {
      background-color: grey;
      color:#fff;
-     
+
  }
 
 
@@ -334,26 +334,26 @@ div label input {
     color: black;
     font-family: "Open Sans";
   }
-  
+
   .top-star {
     width: 100px;
     height: 100px;
     margin: 0 auto;
     display: block;
   }
-  
+
   h1 {
     text-align: center;
   }
-  
+
   h2 {
     margin-top: 35px;
   }
-  
+
   h1, h2, h3, p {
     margin-bottom: 0;
   }
-  
+
   span.stars, span.stars span {
     display: block;
     background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/747/star-o-white.svg) 0 0 repeat-x;
@@ -361,7 +361,7 @@ div label input {
     height: 20px; /* the height of the star */
     background-size: 20px 20px;
   }
-  
+
   span.stars span {
     background-position: 0 0;
     background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/747/star.svg);
@@ -381,7 +381,7 @@ img {vertical-align: middle;}
   margin-right: 2%;
   position: relative;
   width: 80%;
-  
+
 }
 
 /* Next & previous buttons */
@@ -456,12 +456,12 @@ img {vertical-align: middle;}
 }
 
 @-webkit-keyframes fade {
-  from {opacity: .4} 
+  from {opacity: .4}
   to {opacity: 1}
 }
 
 @keyframes fade {
-  from {opacity: .4} 
+  from {opacity: .4}
   to {opacity: 1}
 }
 
@@ -469,3 +469,48 @@ img {vertical-align: middle;}
 @media only screen and (max-width: 300px) {
   .prev, .next,.text {font-size: 11px}
 }
+
+
+
+/* here below is style for star rating */
+*{
+    margin: 0;
+    padding: 0;
+}
+.rate {
+    float: left;
+    height: 46px;
+    padding: 0 10px;
+}
+.rate:not(:checked) > input {
+    position:absolute;
+    top:-9999px;
+}
+.rate:not(:checked) > label {
+    float:right;
+    width:1em;
+    overflow:hidden;
+    white-space:nowrap;
+    cursor:pointer;
+    font-size:30px;
+    color:#ccc;
+}
+.rate:not(:checked) > label:before {
+    content: '★ ';
+}
+.rate > input:checked ~ label {
+    color: #ffc700;
+}
+.rate:not(:checked) > label:hover,
+.rate:not(:checked) > label:hover ~ label {
+    color: #deb217;
+}
+.rate > input:checked + label:hover,
+.rate > input:checked + label:hover ~ label,
+.rate > input:checked ~ label:hover,
+.rate > input:checked ~ label:hover ~ label,
+.rate > label:hover ~ input:checked ~ label {
+    color: #c59b08;
+}
+
+/* Modified from: https://github.com/mukulkant/Star-rating-using-pure-css */

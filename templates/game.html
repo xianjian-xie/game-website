@@ -24,6 +24,7 @@
   <link href="/static/index.css" rel="stylesheet" type="text/css" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
   <script src="static/autocomplete.js" ></script>
+  <script src="static/tag.js"> </script>
 
 </head>
 <body>
@@ -48,10 +49,6 @@
   {% endif %}
 
 
-
-
-
-
 <div class="container-s">
 
   <div class=left-box-s>
@@ -71,14 +68,16 @@
       <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
       <a class="next" onclick="plusSlides(1)">&#10095;</a>
 
-
       <br>
 
+
       <div style="text-align:center">
-        <span class="dot" onclick="currentSlide(1)"></span>
-        <span class="dot" onclick="currentSlide(2)"></span>
-        <span class="dot" onclick="currentSlide(3)"></span>
+        {% for picture in pictures %}
+        <span class="dot" onclick="currentSlide({{loop.index}})"></span>
+        {%endfor%}
       </div>
+
+
     </div>
   </div>
   <div class="right-box-s">
@@ -138,83 +137,83 @@
           </div>
         </div>
         <br>
-        {% if review[9]==name1 %}
-        <form  action="{{ url_for("edit_person", id=game[0]) }}" method="POST">
+        {% if review[8] == oauth_id %}
+        <form  action="{{ url_for("new_review", id=game[0]) }}" method="POST">
           <input id="dr" name="dr" value="{{review[0]}}"></input>
           <button id="delete_review" type="submit">Delete your review</button>
         </form>
         {% endif %}
       </div><br>
-      
+
     </div>
     {% endfor %}
   </div>
   </div>
 </div>
 
-
-
-
+{% if signin == True %}
 <div class="text-box pure-u-1 pure-u-md-1-1 pure-u-lg-1-1">
   <div class="l-box">
-
-
-
-        <div class="tag-box">
-          <form  action="{{ url_for("edit_person", id=game[0]) }}" method="POST">
-          <label for="tag">Your tag  &nbsp&nbsp</label>
-          <input type="text" id="mtag" name="mtag" placeholder="Adding tag">
-          <button id="addtag" type="submit">+</button>
-          </form>
+        <h4>Existing tag: </h4>
+        <div class="tag-box" id ="tag-box">
         </div>
-        <br>
-        <div class="tag-box">
-          {% for tag in tags %}
 
-          <div class="tag1">
-          <form  action="{{ url_for("edit_person", id=game[0]) }}" method="POST">
-          <div id="ck-button">
-            <label>
-               <input type="checkbox" id="ptag" name="ptag" value="{{tag[4]}}"><span>{{tag[2]}}#{{tag[4]}}</span>
-            </label>
-         </div>
-         <button id="addtag" type="submit">+</button>
-          </form>
+        <div class="tag-box">
+          <input type="text" id="tagname" name="tagname" placeholder="Adding new tags">
+          <button id="addtag">+</button>
+        </div>
+
+          <br>
+
+          <form  action="{{ url_for("new_review", id=game[0]) }}" method="POST">
+          <div>
+            <label for="rating">Your rating score</label>
+            <div class="rate">
+                <input type="radio" id="star5" name="rating" value="5" required=""/>
+                <label for="star5" title="text">5 stars</label>
+                <input type="radio" id="star4" name="rating" value="4" required=""/>
+                <label for="star4" title="text">4 stars</label>
+                <input type="radio" id="star3" name="rating" value="3" required=""/>
+                <label for="star3" title="text">3 stars</label>
+                <input type="radio" id="star2" name="rating" value="2" required=""/>
+                <label for="star2" title="text">2 stars</label>
+                <input type="radio" id="star1" name="rating" value="1" required=""/>
+                <label for="star1" title="text">1 star</label>
+            </div>
           </div>
 
-          {% endfor %}
+          <br>
 
+        <div class="comment-box">
+          <div>
+            <label for="rating">Your review title</label>
+            <input type="text" id="title" name="title" placeholder="Adding title"  required="required" pattern=".{3,}" required title="3 characters minimum">
+          </div>
 
+        <br>
+
+        <div id="editor"></div>
+        <input style="display:none;" type="text" id="description" name="description">
+        <button id="updateDescription" type="submit" class="pure-button pure-button-primary">Update Description</button>
 
         </div>
-
-
-    <form  action="{{ url_for("edit_person", id=game[0]) }}" method="POST">
-    <div class="comment-box">
-
-      <div>
-        <label for="rating">Your review title</label>
-        <input type="text" id="title" name="title" placeholder="Adding title"  required="required" pattern=".{3,}" required title="3 characters minimum">
-      </div>
-      <br>
-      <div>
-        <label for="rating">Your rating score</label>
-        <input type="text" id="rating" name="rating" placeholder="From 0 to 5" required="required" pattern=".{1,}" required title="1 number minimum">
-      </div>
-      <br>
-      <div id="editor"></div>
-      <input style="display:none;" type="text" id="description" name="description">
-      <button id="updateDescription" type="submit" class="pure-button pure-button-primary">Update Description</button>
-
-    </div>
     </form>
   </div>
 </div>
+{% else %}
+<div>
+<h2>You can leave your review here </h3>
+<form action="{{ url_for("verifyreviewer", id=game[0]) }}">
+    <input type="submit" value="Submit Review" />
+</form>
+</div>
+
+{% endif %}
+
+<!-- user new review implementation -->
 
 
 <!-- script for turn on/off review -->
-
-
   {% if signin == True %}
   <script type="text/javascript">
    document.getElementById("updateDescription").disabled = false;
@@ -226,7 +225,7 @@
   {% endif %}
 
 
-
+<!-- for written box -->
 <script>
   var toolbarOptions = [
 ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
@@ -258,16 +257,10 @@ theme: 'snow'
 document.querySelector("#updateDescription").addEventListener("click", (e) => {
 document.querySelector("#description").value = quill.root.innerHTML
 });
-
-
-
-
 </script>
 
 
-
-
-
+<!-- script for slide show -->
   <script>
   var slideIndex = 1;
   showSlides(slideIndex);
@@ -297,8 +290,10 @@ document.querySelector("#description").value = quill.root.innerHTML
   }
   </script>
 
-  <script>
-    // Set this to the width of one star.
+
+<!-- script for setting rating star -->
+<script>
+// Set this to the width of one star.
 var starWidth = 20;
 
 $.fn.stars = function() {
@@ -310,6 +305,7 @@ $(document).ready(function() {
   $('span.stars').stars();
 });
   </script>
+
 
   </body>
 

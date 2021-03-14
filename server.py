@@ -11,7 +11,6 @@ import time
 import datetime
 
 
-
 app = Flask(__name__)
 app.secret_key = os.environ["FLASK_SECRET_KEY"]
 
@@ -109,16 +108,13 @@ def home():
 
 @app.route('/<int:id>', methods=['GET'])
 def game(id):
-    userinfo=session['profile']
-    app.logger.info(userinfo)
-    name1=userinfo['name']
-
-
     if 'profile' in session:
         signin = True
-        avatar = session['profile']["picture"]
+        oauth_id = session['profile']['user_id']
+        avatar = session['profile']['picture']
     else:
         signin = False
+        oauth_id = None
         avatar = None
 
     with db.get_db_cursor(True) as cur:
@@ -149,18 +145,13 @@ def game(id):
             cur.execute("SELECT * from game_tag, tag where game_id = %s and tag_id=id" ,(id,))
             tags = [record for record in cur]
 
-            #may need to consider here is there is no tag
-
             #select the most recent k reviews for the game
-            k=3
-            cur.execute("SELECT * from review, reviewer where game_id = %s and review.reviewer_id=reviewer.id order by timestamp DESC",(id,))
+            k=5
+            cur.execute("SELECT * from review, reviewer where game_id = %s and review.reviewer_id=reviewer.id order by timestamp DESC limit %s",(id,k))
             reviews = [record for record in cur]
 
-            if (len(reviews) > k):
-                reviews = reviews[:k]
-
             #tag is a nested list with count in tag[][1],reviews is a nest list with k reviews
-            return render_template("game.html", game=game,tags=tags,reviews=reviews, pictures=pictures,signin = signin,avatar = avatar,name1=name1)
+            return render_template("game.html", game=game,tags=tags,reviews=reviews, pictures=pictures,signin = signin,avatar = avatar,oauth_id=oauth_id)
 
             #return render_template("game.html", name=name, picture=game[0][0], video_link= game[0][1],overall_rating=game[0][2],desciption=game[0][3],platform=game[0][4], \
             #tag=tag,reviewer=review[0],title=review[1],content=review[2],review_rating=review[3])
@@ -178,7 +169,6 @@ def search():
     else:
         signin = False
         avatar = None
-
 
     with db.get_db_cursor() as cur:
         name = request.args.get("global")
@@ -215,25 +205,16 @@ def search_autocomplete():
             for i in trie_game_list:
                 trie.insert(i)
 
-            # trie = session['search_trie']
-            # app.logger.info(trie.getData(query))
-        # with db.get_db_cursor() as cur:
-        #     cur.execute("SELECT name FROM game WHERE name like %s;", ("%"+query+"%", ))
-        #     results = [x[0] for x in cur]
             app.logger.info("return is %s",list(trie.getData(query)))
             return jsonify(list(trie.getData(query)))
 
 
 
-
-
 @app.route('/<int:id>', methods=['POST'])
-def edit_person(id):
-    userinfo=session['profile']
-    app.logger.info(userinfo)
-    name1=userinfo['name']
-    
-    
+def new_review(id):
+    #when I can call this function, I am definitely in session
+    oauth_id = session['profile']['user_id']
+
     title = request.form.get("title")
     description = request.form.get("description")
     rating = request.form.get("rating")
@@ -244,17 +225,23 @@ def edit_person(id):
         rid = request.form.get("dr")
         app.logger.info(rid)
         if rid!=None and rid!="":
-            cur.execute("DELETE  FROM review WHERE id=%s;",(rid,))
-
-
-
+            cur.execute("DELETE FROM review WHERE id=%s;",(rid,))
 
         if title!="" and title!=None:
-            cur.execute("SELECT id from reviewer where name = %s",(name1,))
+            cur.execute("SELECT id from reviewer where oauth_id = %s",(oauth_id,))
             reviewer_id=[record[0] for record in cur][0]
             cur.execute("INSERT INTO review (reviewer_id, game_id, timestamp, title, content, rating) VALUES (%s, %s, %s, %s, %s, %s);", (reviewer_id,id, timestamp, title, description,rating,))
 
-        tags = request.form.get("mtag")
+        #update overall rating in game table
+        if rating != None and title!="":
+            cur.execute("SELECT rating, review_number from game where id = %s",(id,))
+            overall_rating = [record[0] for record in cur][0]
+            review_number = [record[1] for record in cur][0]
+            overall_rating = (overall_rating*review_number + rating)/(review_number+1)
+            cur.excute("UPDATE game set rating = %s, review_number = %s where id = %s",(overall_rating,review_number+1,id,))
+
+        #update tag
+        tags = request.form.get("tag")
         if tags!=None and tags!="":
             cur.execute("SELECT tag_id, count, name from game_tag, tag where game_id = %s and id=tag_id",(id,))
             exist_tag_id = [record[0] for record in cur]
@@ -275,76 +262,11 @@ def edit_person(id):
                 cur.execute("INSERT INTO tag (id,name) values (%s,%s)",(num_tag+1,tags,))
                 cur.execute("INSERT INTO game_tag (game_id,tag_id,count) values (%s,%s,%s)",(id,num_tag+1,new_count,))
 
-
-        ptags = request.form.get("ptag")
-        if ptags!= None:
-            cur.execute("SELECT tag_id, count, name from game_tag, tag where game_id = %s and id=tag_id",(id,))
-            exist_tag_id = [record[0] for record in cur]
-            cur.execute("SELECT tag_id, count, name from game_tag, tag where game_id = %s and id=tag_id",(id,))
-            tag_count = [record[1] for record in cur]
-            cur.execute("SELECT tag_id, count, name from game_tag, tag where game_id = %s and id=tag_id",(id,))
-            exist_tag_name = [record[2] for record in cur]
-            cur.execute("SELECT count(id) from tag")
-            num_tag=[record[0] for record in cur][0]
-            tag_index=-1
-            tag_index = exist_tag_name.index(ptags)
-            new_count = tag_count[tag_index] + 1
-            cur.execute("UPDATE game_tag set count = %s where game_id = %s and tag_id = %s",(new_count,id,exist_tag_id[tag_index],))
-            app.logger.info(ptags)
-
-
-
-
-
         return redirect(url_for("game", id=id))
 
-@app.route('/<int:id>', methods=['POST'])
-def delete_review(id):
-    rid = request.form.get("dr")
-    app.logger.info(rid)
-    with db.get_db_cursor(True) as cur:
-        cur.execute("DELETE  FROM review WHERE id=%s;",(rid,))
+
+@app.route('/verifyreviewer', methods=['GET'])
+@require_auth
+def verifyreviewer():
+    id = request.form.get("")
     return redirect(url_for("game", id=id))
-
-
-
-#new review:input-review, return to game page
-@app.route('/<int:id>',methods=['POST'])
-def new_review(id):
-    with db.get_db_cursor() as cur:
-
-        #insert review into review table
-        reviewer = requst.form.get("reviewer")#this might need to be changed by auth0 function
-        title = request.form.get("title")
-        content = request.form.get("content")
-        rating = request.form.get("rating")
-
-        app.logger.info("Insert review in database %s %s %s %s %s", reviewer,name,title,content,rating)
-        cur.execute("INSERT INTO review (reviewer,game,title,content,rating) values (%s,%s,%s,%s,%s)", (reviewer,name,title,content,rating,))#if I do not put time, if would default put a timestamp
-
-        #update game_tag table, this might need to be changed, assume what form give is a string list
-        tags = request.form.get("tag")
-        if tags != None:
-            cur.execute("SELECT tag, count from game_tag where game = %s",(name,))
-            exist_tag = [record[0] for record in cur]
-            tag_count = [record[1] for record in cur]
-            for tag in tags:
-                if tag in exist_tag:
-                    tag_index = exist_tag.index(tag)
-                    new_count = tag_count[tag_index] + 1
-                    cur.excute("UPDATE game_tag set count = %s where game = %s and tag = %s",(new_count,name,tag,))
-                else:
-                    new_count = 1
-                    cur.excute("INSERT INTO game_tag (game,tag,count) values (%s,%s,%s)",(name,tag,new_count,))
-
-        #may need to update tag table, this need furthur discussion
-
-        #update overall rating in game table
-        if rating != None:
-            cur.execute("SELECT rating, review_number from game where name = %s",(name,))
-            overall_rating = [record[0] for record in cur]#[0]
-            review_number = [record[1] for record in cur]#[0]
-            overall_rating = (overall_rating*review_number + rating)/(review_number+1)
-            cur.excute("UPDATE game set rating = %s, review_number = %s where name = %s",(overall_rating,review_number+1,name,))
-
-    return redirect(url_for('game',id=id))
