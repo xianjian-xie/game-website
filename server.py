@@ -23,7 +23,7 @@ def initialize():
 
 @app.errorhandler(404)
 def error404(error):
-    return "oh no. you killed it."
+    return "We don't have this game in our database"
 
 ### AUTH:
 @app.route('/login')
@@ -98,9 +98,9 @@ def home():
         #select the most recent k reviews
         k=10
         #cur.execute("SELECT * from review order by timestamp DESC limit %s",(k,))
-        cur.execute("SELECT * from review, reviewer where review.reviewer_id=reviewer.id order by timestamp DESC limit %s",(k,))
+        cur.execute("SELECT * from review, reviewer, game where review.reviewer_id=reviewer.id and review.game_id = game.id order by timestamp DESC limit %s",(k,))
         reviews = [record for record in cur]
-
+        app.logger.info("Review is %s",reviews[0])
         # session['search_trie'] = trie.__dict__
 
     return render_template('main.html',reviews=reviews,rating_game_list=rating_game_list,popularity_game_list=popularity_game_list,signin = signin,avatar = avatar)
@@ -167,41 +167,56 @@ def game(id):
 #fuzzy search and auto-complete not implemented, may need further implementation (might have question here)
 @app.route('/search', methods=['GET'])
 def search():
-    with db.get_db_cursor() as cur:
+    if 'profile' in session:
+        signin = True
+        avatar = session['profile']["picture"]
+    else:
+        signin = False
+        avatar = None
 
+
+    with db.get_db_cursor() as cur:
         name = request.args.get("global")
         app.logger.info("Search for game %s", name)
         #first find if game exits in our database and extract game data
-        cur.execute("SELECT * from game where name like %s", ("%"+name+"%",))
+        cur.execute("SELECT * from game where name ilike %s", ("%"+name+"%",))
         games = [record for record in cur]
         if(len(games) == 0):
             return abort(404)
         else:
-            return render_template("search.html", games=games)
+
+            cur.execute("SELECT * from game order by rating DESC limit 10")
+            rating_game_list = [record for record in cur]
+            app.logger.info("Inside list is %s %s %s %s %s %s %s %s %s %s",rating_game_list[0][0],rating_game_list[0][1],rating_game_list[0][2],rating_game_list[0][3],rating_game_list[0][4],rating_game_list[0][5],rating_game_list[0][6],rating_game_list[0][7],rating_game_list[0][8],rating_game_list[0][9])
+            cur.execute("SELECT * from game order by popularity DESC limit 10")
+            popularity_game_list = [record for record in cur]
+
+            return render_template("search.html", games=games,rating_game_list=rating_game_list,popularity_game_list=popularity_game_list,signin = signin,avatar = avatar)
 
 
 @app.route("/autocomplete", methods=['GET'])
 def search_autocomplete():
-    query = request.args.get("query")
-    app.logger.info("query is %s",query)
+    if not request.args.get("query"):
+        app.logger.info("I am here")
+        return jsonify([])
 
-    # if query == "":
-    #     return jsonify([])
+    else:
+        query = request.args.get("query")
+        app.logger.info("query is %s",query)
+        with db.get_db_cursor() as cur:
+            trie = Trie()
+            cur.execute("SELECT name from game order by popularity DESC")
+            trie_game_list = [record[0] for record in cur]
+            for i in trie_game_list:
+                trie.insert(i)
 
-    with db.get_db_cursor() as cur:
-        trie = Trie()
-        cur.execute("SELECT name from game order by popularity DESC")
-        trie_game_list = [record[0] for record in cur]
-        for i in trie_game_list:
-            trie.insert(i)
-
-        # trie = session['search_trie']
-        # app.logger.info(trie.getData(query))
-    # with db.get_db_cursor() as cur:
-    #     cur.execute("SELECT name FROM game WHERE name like %s;", ("%"+query+"%", ))
-    #     results = [x[0] for x in cur]
-        app.logger.info("return is %s",list(trie.getData(query)))
-        return jsonify(list(trie.getData(query)))
+            # trie = session['search_trie']
+            # app.logger.info(trie.getData(query))
+        # with db.get_db_cursor() as cur:
+        #     cur.execute("SELECT name FROM game WHERE name like %s;", ("%"+query+"%", ))
+        #     results = [x[0] for x in cur]
+            app.logger.info("return is %s",list(trie.getData(query)))
+            return jsonify(list(trie.getData(query)))
 
 
 
@@ -252,16 +267,16 @@ def edit_person(id):
             new_count = tag_count[tag_index] + 1
             cur.execute("UPDATE game_tag set count = %s where game_id = %s and tag_id = %s",(new_count,id,exist_tag_id[tag_index],))
             app.logger.info(ptags)
-            
 
-           
 
-    
+
+
+
         return redirect(url_for("game", id=id))
 
 @app.route('/<int:id>', methods=['POST'])
 def adding_tag(id):
-   
+
         return redirect(url_for("game", id=id))
 
 

@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width" />
+<title>DR.VIDEO GAMES</title>
+<script type="text/javascript" src="/static/js/jquery-1.8.3.min.js"></script>
+<link href="/static/style.css" rel="stylesheet" type="text/css" />
+<link href="/static/index.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<div class="hdDk">
+		<h2 class="logo"><a href="javascript:;"><img src="/static/images/logo.png"></a></h2>
+		<a href="javascript:;" class="signA"><i><img src="/static/images/sign-icon.png"></i><span>Sign in</span></a>
+	</div>
+</div>
+
+<div class="mainB">
+
+	<div class="searchB">
+		<div class="searchB-inp-wrap">
+			<div class="inpB">
+				<input type="text" name="search" class="inp" placeholder="What Game Are you looking for">
+			</div>
+			<a href="javascript:;" class="btn-search">search</a>
+		</div>
+		<div class="hotB">
+			<p>Hot Search: </p>
+			<ul class="hotB-ul">
+				<li><a href="javascript:;">only wolves</a></li>
+				<li><a href="javascript:;">two shades of grey</a></li>
+				<li><a href="javascript:;">humans wiped out</a></li>
+				<li><a href="javascript:;">humans wiped out</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="result-title"><p>57 <span>relevant search result</span></p></div>
+
+	<div class="listB">
+    {% for game in games %}
+		<div class="list-l result-l">
+			<div class="resultB">
+				<ul class="resultB-ul">
+					<li class="resultB-li">
+						<!-- <div class="resultB-img"><img src={{picture}}></div> -->
+						<div class="resultB-content">
+							<h3> <a href="{{ url_for("game", id=game[0]) }}"> {{game[1]}} </a> </h3>
+							<h5 class="evaluateB-li-l-desc resultB-li-l-desc"> {{game[5]}} </h5>
+							<p class="infoB">
+								<span class="message">2536</span>
+								<span class="give">620</span>
+							</p>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+    {% endfor %}
+
+		<div class="list-r list-common">
+			<h2 class="title">Ranking（with sort）<span class="sort">sort</span></h2>
+			<div class="recommendB">
+				<ul class="recommendB-ul">
+					<li class="recommendB-li">
+						<a href="javascript:;" class="recommendB-li-a">
+							<div class="recommendB-li-img enlarge"><img src="/static/images/recommend01.jpg"><i class="color-one">1</i></div>
+							<div class="recommendB-li-r-box">
+								<h3 class="evaluateB-li-l-title">Valheim</h3>
+								<h5 class="recommendB-li-r-desc">Action,Adventure,RPG,Superhero,Multiplayer ,Online World,Cinematic</h5>
+							</div>
+						</a>
+					</li>
+					<li class="recommendB-li">
+						<a href="javascript:;" class="recommendB-li-a">
+							<div class="recommendB-li-img enlarge"><img src="/static/images/recommend02.jpg"><i class="color-two">2</i></div>
+							<div class="recommendB-li-r-box">
+								<h3 class="evaluateB-li-l-title">Marvel’s Avengers</h3>
+								<h5 class="recommendB-li-r-desc">Action,Adventure,RPG,Superhero,Multiplayer ,Online World,Cinematic</h5>
+							</div>
+						</a>
+					</li>
+					<li class="recommendB-li">
+						<a href="javascript:;" class="recommendB-li-a">
+							<div class="recommendB-li-img enlarge"><img src="/static/images/recommend03.jpg"><i class="color-three">3</i></div>
+							<div class="recommendB-li-r-box">
+								<h3 class="evaluateB-li-l-title">Valheim</h3>
+								<h5 class="recommendB-li-r-desc">Action,Adventure,RPG,Superhero,Multiplayer ,Online World,Cinematic</h5>
+							</div>
+						</a>
+					</li>
+					<li class="recommendB-li">
+						<a href="javascript:;" class="recommendB-li-a">
+							<div class="recommendB-li-img enlarge"><img src="/static/images/recommend04.jpg"><i>4</i></div>
+							<div class="recommendB-li-r-box">
+								<h3 class="evaluateB-li-l-title">Craftopia</h3>
+								<h5 class="recommendB-li-r-desc">Action,Adventure,RPG,Superhero,Multiplayer ,Online World,Cinematic</h5>
+							</div>
+						</a>
+					</li>
+					<li class="recommendB-li">
+						<a href="javascript:;" class="recommendB-li-a">
+							<div class="recommendB-li-img enlarge"><img src="/static/images/recommend05.jpg"><i>5</i></div>
+							<div class="recommendB-li-r-box">
+								<h3 class="evaluateB-li-l-title">WORLD WAR Z</h3>
+								<h5 class="recommendB-li-r-desc">Action,Adventure,RPG,Superhero,Multiplayer ,Online World,Cinematic</h5>
+							</div>
+						</a>
+					</li>
+					<li class="recommendB-li">
+						<a href="javascript:;" class="recommendB-li-a">
+							<div class="recommendB-li-img enlarge"><img src="/static/images/recommend06.jpg"><i>6</i></div>
+							<div class="recommendB-li-r-box">
+								<h3 class="evaluateB-li-l-title">Cities: Skylines</h3>
+								<h5 class="recommendB-li-r-desc">Action,Adventure,RPG,Superhero,Multiplayer ,Online World,Cinematic</h5>
+							</div>
+						</a>
+					</li>
+					<li class="recommendB-li">
+						<a href="javascript:;" class="recommendB-li-a">
+							<div class="recommendB-li-img enlarge"><img src="/static/images/recommend01.jpg"><i>7</i></div>
+							<div class="recommendB-li-r-box">
+								<h3 class="evaluateB-li-l-title">Valheim</h3>
+								<h5 class="recommendB-li-r-desc">Action,Adventure,RPG,Superhero,Multiplayer ,Online World,Cinematic</h5>
+							</div>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+
+<script language="JavaScript" type="text/JavaScript">
+	$(function(){
+		$('.mainB').css({'padding-top':parseFloat($('.header').height())});
+
+		var resultBH = $('.resultB').outerHeight();
+		$('.result-l').height(resultBH);
+		/*$(".evaluate-box-starB span").click(function() {
+            $(this).addClass("light-star");
+            $(this).prevAll().addClass("light-star");
+            $(this).nextAll().removeClass("light-star");
+        });*/
+
+        $('.give').click(function(){
+        	$(this).html();
+        	console.log($(this).html());
+        })
+	})
+</script>
+
+
+</html>
