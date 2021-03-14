@@ -109,6 +109,11 @@ def home():
 
 @app.route('/<int:id>', methods=['GET'])
 def game(id):
+    userinfo=session['profile']
+    app.logger.info(userinfo)
+    name1=userinfo['name']
+
+
     if 'profile' in session:
         signin = True
         avatar = session['profile']["picture"]
@@ -155,7 +160,7 @@ def game(id):
                 reviews = reviews[:k]
 
             #tag is a nested list with count in tag[][1],reviews is a nest list with k reviews
-            return render_template("game.html", game=game,tags=tags,reviews=reviews, pictures=pictures,signin = signin,avatar = avatar)
+            return render_template("game.html", game=game,tags=tags,reviews=reviews, pictures=pictures,signin = signin,avatar = avatar,name1=name1)
 
             #return render_template("game.html", name=name, picture=game[0][0], video_link= game[0][1],overall_rating=game[0][2],desciption=game[0][3],platform=game[0][4], \
             #tag=tag,reviewer=review[0],title=review[1],content=review[2],review_rating=review[3])
@@ -235,10 +240,19 @@ def edit_person(id):
     ts=time.time()
     timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
     with db.get_db_cursor(True) as cur:
+
+        rid = request.form.get("dr")
+        app.logger.info(rid)
+        if rid!=None and rid!="":
+            cur.execute("DELETE  FROM review WHERE id=%s;",(rid,))
+
+
+
+
         if title!="" and title!=None:
             cur.execute("SELECT id from reviewer where name = %s",(name1,))
             reviewer_id=[record[0] for record in cur][0]
-            cur.execute("INSERT INTO review (reviewer_id, game_id, timestamp, title, content, rating) VALUES (%s, %s, %s, %s, %s, %s);", (reviewer_id,id, timestamp, title, description,rating))
+            cur.execute("INSERT INTO review (reviewer_id, game_id, timestamp, title, content, rating) VALUES (%s, %s, %s, %s, %s, %s);", (reviewer_id,id, timestamp, title, description,rating,))
 
         tags = request.form.get("mtag")
         if tags!=None and tags!="":
@@ -285,9 +299,12 @@ def edit_person(id):
         return redirect(url_for("game", id=id))
 
 @app.route('/<int:id>', methods=['POST'])
-def adding_tag(id):
-
-        return redirect(url_for("game", id=id))
+def delete_review(id):
+    rid = request.form.get("dr")
+    app.logger.info(rid)
+    with db.get_db_cursor(True) as cur:
+        cur.execute("DELETE  FROM review WHERE id=%s;",(rid,))
+    return redirect(url_for("game", id=id))
 
 
 

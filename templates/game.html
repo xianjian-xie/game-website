@@ -137,7 +137,15 @@
             <p>rating:<span class="stars">{{review[6]}}</span></p>
           </div>
         </div>
+        <br>
+        {% if review[9]==name1 %}
+        <form  action="{{ url_for("edit_person", id=game[0]) }}" method="POST">
+          <input id="dr" name="dr" value="{{review[0]}}"></input>
+          <button id="delete_review" type="submit">Delete your review</button>
+        </form>
+        {% endif %}
       </div><br>
+      
     </div>
     {% endfor %}
   </div>
