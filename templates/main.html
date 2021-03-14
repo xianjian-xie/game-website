@@ -95,7 +95,11 @@ $('span.stars').stars();
 
 						<div class="evaluateB-li-l">
 							<h3 class="evaluateB-li-l-title">{{review[4]}}</h3>
-							<h5 class="evaluateB-li-l-desc">{{review[5]|safe}}</h5>
+							<h5 class="evaluateB-li-l-desc">
+								<div class="review-content">
+									<img>{{review[5]|safe}}</img>
+								  </div>
+							</h5>
 							<div class="evaluateB-li-l-user">
 								<i><img src={{review[10]}}></i>
 								<p>{{review[9]}}</p>
