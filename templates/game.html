@@ -24,7 +24,7 @@
   <link href="/static/index.css" rel="stylesheet" type="text/css" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
   <script src="static/autocomplete.js" ></script>
-  <script src="static/tag.js"> </script>
+  <!-- <script src="static/tag.js"> </script> -->
 
 </head>
 <body>
@@ -33,7 +33,7 @@
   <div class="header">
   	<div class="hdDk">
   		<h2 class="logo"><a href="{{ url_for("home") }}"><img src="/static/images/logo.png"></a></h2>
-  		<a href="{{ url_for("logout") }}" class="signA"><i><img src={{avatar}}></i><span>Log out</span></a>
+  		<a href="{{ url_for("logout") }}" class="signA"><div class="evaluateB-li-l-user"><i> <img src={{avatar}}>	</i></div> <span> Log out</span></a>
   	</div>
   </div>
 
@@ -42,7 +42,7 @@
   <div class="header">
   	<div class="hdDk">
   		<h2 class="logo"><a href="{{ url_for("home") }}"><img src="/static/images/logo.png"></a></h2>
-  		<a href="{{ url_for("login") }}" class="signA"><i><img src="/static/images/sign-icon.png"></i><span>Sign in</span></a>
+  		<a href="{{ url_for("login") }}" class="signA"><i><img src="/static/images/sign-icon.png"></i><span> Sign in</span></a>
   	</div>
   </div>
 
@@ -51,7 +51,8 @@
 
 <div class="container-s">
 
-  <div class=left-box-s>
+  <!-- <div class="left-box-s"> -->
+    <div class="left-box-s">
     <h1>{{game[1]}}</h1>
     <div class="slideshow-container">
 
@@ -76,10 +77,9 @@
         <span class="dot" onclick="currentSlide({{loop.index}})"></span>
         {%endfor%}
       </div>
-
-
     </div>
   </div>
+
   <div class="right-box-s">
     <!--
     <div>
@@ -152,16 +152,44 @@
 </div>
 
 {% if signin == True %}
+<div class="hotB hotB-ps">
+  <p>You can edit your review here.</p>
+</div>
+
 <div class="text-box pure-u-1 pure-u-md-1-1 pure-u-lg-1-1">
-  <div class="l-box">
-        <h4>Existing tag: </h4>
-        <div class="tag-box" id ="tag-box">
-        </div>
+  <div class="newreview-box">
 
         <div class="tag-box">
+          <h4>Existing tag: </h4>
+          <div id ="tag-box">
+          </div>
           <input type="text" id="tagname" name="tagname" placeholder="Adding new tags">
           <button id="addtag">+</button>
         </div>
+
+        <script>
+        var div = document.getElementById('tag-box');
+        function addTag() {
+          console.log("addTag")
+          button = document.createElement('button');
+          button.setAttribute("id", "existingtag");
+          // button.innerHTML = 'X';
+          button.innerHTML = document.getElementById("tagname").value;
+          // button.value = document.getElementById("tagname").value;
+          // attach onlick event handler to remove button
+          button.onclick = removeTag;
+          div.appendChild(button);
+        }
+
+        function removeTag() {
+          // remove this button and its input
+          div.removeChild(this);
+        }
+
+        document.getElementById('addtag').addEventListener('click', addTag);
+        document.getElementById('existingtag').addEventListener('click', removeTag);
+
+        </script>
 
           <br>
 
@@ -200,6 +228,7 @@
     </form>
   </div>
 </div>
+
 {% else %}
 <div>
 <h2>You can leave your review here </h3>

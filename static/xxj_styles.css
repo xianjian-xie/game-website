@@ -18,6 +18,13 @@ h1,h2,h3,h4,h5,h6 {
 
 }
 
+.newreview-box {
+  width: 80%;
+  padding: 2em;
+  height:800px;
+  background: white;
+}
+
 .left-box {
     float: left;
     width: 400px;
@@ -81,6 +88,7 @@ h1,h2,h3,h4,h5,h6 {
 .l-box {
     padding: 2em;
 }
+
 
 .header .pure-menu {
     border-bottom-color: black;

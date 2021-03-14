@@ -233,15 +233,16 @@ def new_review(id):
             cur.execute("INSERT INTO review (reviewer_id, game_id, timestamp, title, content, rating) VALUES (%s, %s, %s, %s, %s, %s);", (reviewer_id,id, timestamp, title, description,rating,))
 
         #update overall rating in game table
-        if rating != None and title!="":
+        if rating != None and rating != "":
             cur.execute("SELECT rating, review_number from game where id = %s",(id,))
             overall_rating = [record[0] for record in cur][0]
+            cur.execute("SELECT rating, review_number from game where id = %s",(id,))
             review_number = [record[1] for record in cur][0]
-            overall_rating = (overall_rating*review_number + rating)/(review_number+1)
-            cur.excute("UPDATE game set rating = %s, review_number = %s where id = %s",(overall_rating,review_number+1,id,))
+            overall_rating = (overall_rating*review_number + int(rating))/(review_number+1)
+            cur.execute("UPDATE game set rating = %s, review_number = %s where id = %s",(overall_rating,review_number+1,id,))
 
         #update tag
-        tags = request.form.get("tag")
+        tags = request.form.get("existingtag")
         if tags!=None and tags!="":
             cur.execute("SELECT tag_id, count, name from game_tag, tag where game_id = %s and id=tag_id",(id,))
             exist_tag_id = [record[0] for record in cur]
