@@ -9,22 +9,48 @@ h1,h2,h3,h4,h5,h6 {
 .review-area {
     max-height: 1000px;
     overflow: auto;
+    margin-left: 20%;
+    margin-right: 20%;
 
 }
 
 .review-box {
     display: flex;
-    margin-bottom: 50px;
+    margin-bottom: 5px;
 
 }
 
-.newreview-box {
-  width: 80%;
-  padding: 2em;
-  height:800px;
+.new-review-box {
+
+
+  margin-bottom: 5px;
   background: white;
+
 }
 
+
+.tag-box {
+    margin-bottom: 10px;
+}
+.rating-box {
+    margin-top: 20px;
+
+    display: flex;
+}
+.rating-h-box p {
+  margin-top: 12px;
+}
+
+.comment-box {
+    margin-top: 2%;
+}
+
+
+
+.tag-space {
+    flex:5%;
+    margin-right: 10px;
+}
 .left-box {
     float: left;
     width: 400px;
@@ -33,7 +59,7 @@ h1,h2,h3,h4,h5,h6 {
     border-right-width: 10px;
     background-color: white;
     flex:50%;
-    margin-left: 20%;
+
 }
 
 .right-box {
@@ -43,7 +69,7 @@ h1,h2,h3,h4,h5,h6 {
     border: 1px  #cecece ;
     background-color: white;
     flex: 50%;
-    margin-right:20%;
+
 }
 .right-box input{
     display: none;
@@ -180,6 +206,8 @@ h1,h2,h3,h4,h5,h6 {
         /*text-transform: uppercase;*/
         letter-spacing: 0.05em;
         font-size: 24px;
+        text-align: left;
+
     }
 
     .text-box-subhead {
@@ -273,24 +301,10 @@ h1,h2,h3,h4,h5,h6 {
 
 }
 
-.comment-box {
-    margin-left: 20%;
-    margin-right: 20%;
-    margin-top: 2%;
-}
 
-.tag-box {
-    margin-left: 20%;
-    margin-right: 20%;
-    display: flex;
-}
 
-.tag1 {flex:20%;}
-.tag1 button{float:left; margin-top: 7px;}
-.tag2 {flex:20%;}
-.tag3 {flex:20%;}
-.tag4 {flex:20%;}
-.tag5 {flex:20%;}
+
+
 
 
 div label input {
