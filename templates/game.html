@@ -105,8 +105,9 @@
 
 <div class="text-box pure-u-1 pure-u-md-1-1 pure-u-lg-1-1">
   <div class="l-box">
-    <h1 class="text-box-head">User Reviews</h1>
+    
     <div class="review-area">
+      <h1 class="text-box-head">Game Reviews</h1>
     {% for review in reviews %}
     <div class="review-box">
       <div class="left-box">
@@ -151,66 +152,52 @@
   </div>
 </div>
 
-{% if signin == True %}
-<div class="hotB hotB-ps">
-  <p>You can edit your review here.</p>
-</div>
+
+
 
 <div class="text-box pure-u-1 pure-u-md-1-1 pure-u-lg-1-1">
-  <div class="newreview-box">
-
-        <div class="tag-box">
-          <h4>Existing tag: </h4>
-          <div id ="tag-box">
+  <div class="l-box">
+    
+    <div class="review-area">
+      <h1 class="text-box-head">Adding Your Reviews</h1>
+    
+    <div class="new-review-box">
+      <div class="tag-box">
+        <input type="text" id="tagname" name="tagname" placeholder="Adding new tags">
+        &nbsp
+        <button id="addtag">+</button>
+      </div>
+      <br>
+      
+      <div class="tag-box">
+          <div class="tag-space" id ="tag-box">
           </div>
-          <input type="text" id="tagname" name="tagname" placeholder="Adding new tags">
-          <button id="addtag">+</button>
-        </div>
+      </div>
 
-        <script>
-        var div = document.getElementById('tag-box');
-        function addTag() {
-          console.log("addTag")
-          button = document.createElement('button');
-          button.setAttribute("id", "existingtag");
-          // button.innerHTML = 'X';
-          button.innerHTML = document.getElementById("tagname").value;
-          // button.value = document.getElementById("tagname").value;
-          // attach onlick event handler to remove button
-          button.onclick = removeTag;
-          div.appendChild(button);
-        }
-
-        function removeTag() {
-          // remove this button and its input
-          div.removeChild(this);
-        }
-
-        document.getElementById('addtag').addEventListener('click', addTag);
-        document.getElementById('existingtag').addEventListener('click', removeTag);
-
-        </script>
-
-          <br>
-
-          <form  action="{{ url_for("new_review", id=game[0]) }}" method="POST">
-          <div>
-            <label for="rating">Your rating score</label>
+      <form  action="{{ url_for("new_review", id=game[0]) }}" method="POST">
+        <div class="rating-box">
+          <div class="rating-h-box">
+            <p for="rating">Your rating score:</p>
+          </div>
+          <div class="rating-h-box">
             <div class="rate">
-                <input type="radio" id="star5" name="rating" value="5" required=""/>
-                <label for="star5" title="text">5 stars</label>
-                <input type="radio" id="star4" name="rating" value="4" required=""/>
-                <label for="star4" title="text">4 stars</label>
-                <input type="radio" id="star3" name="rating" value="3" required=""/>
-                <label for="star3" title="text">3 stars</label>
-                <input type="radio" id="star2" name="rating" value="2" required=""/>
-                <label for="star2" title="text">2 stars</label>
-                <input type="radio" id="star1" name="rating" value="1" required=""/>
-                <label for="star1" title="text">1 star</label>
+              <input type="radio" id="star5" name="rating" value="5" required=""/>
+              <label for="star5" title="text">5 stars</label>
+              <input type="radio" id="star4" name="rating" value="4" required=""/>
+              <label for="star4" title="text">4 stars</label>
+              <input type="radio" id="star3" name="rating" value="3" required=""/>
+              <label for="star3" title="text">3 stars</label>
+              <input type="radio" id="star2" name="rating" value="2" required=""/>
+              <label for="star2" title="text">2 stars</label>
+              <input type="radio" id="star1" name="rating" value="1" required=""/>
+              <label for="star1" title="text">1 star</label>
             </div>
           </div>
+          
+        </div>
+        
 
-          <br>
+        <br>
 
         <div class="comment-box">
           <div>
@@ -218,26 +205,48 @@
             <input type="text" id="title" name="title" placeholder="Adding title"  required="required" pattern=".{3,}" required title="3 characters minimum">
           </div>
 
-        <br>
+          <br>
 
-        <div id="editor"></div>
-        <input style="display:none;" type="text" id="description" name="description">
-        <button id="updateDescription" type="submit" class="pure-button pure-button-primary">Update Description</button>
+          <div id="editor"></div>
+          <input style="display:none;" type="text" id="description" name="description">
+          <button id="updateDescription" type="submit" class="pure-button pure-button-primary">Update Description</button>
 
         </div>
-    </form>
+      </form>
+      
+    </div>
+    
+  </div>
   </div>
 </div>
 
-{% else %}
-<div>
-<h2>You can leave your review here </h3>
-<form action="{{ url_for("verifyreviewer", id=game[0]) }}">
-    <input type="submit" value="Submit Review" />
-</form>
-</div>
 
-{% endif %}
+
+
+
+<script>
+  var div = document.getElementById('tag-box');
+  function addTag() {
+    console.log("addTag")
+    button = document.createElement('button');
+    button.setAttribute("id", "existingtag");
+    // button.innerHTML = 'X';
+    button.innerHTML = document.getElementById("tagname").value;
+    // button.value = document.getElementById("tagname").value;
+    // attach onlick event handler to remove button
+    button.onclick = removeTag;
+    div.appendChild(button);
+  }
+
+  function removeTag() {
+    // remove this button and its input
+    div.removeChild(this);
+  }
+
+  document.getElementById('addtag').addEventListener('click', addTag);
+  document.getElementById('existingtag').addEventListener('click', removeTag);
+
+  </script>
 
 <!-- user new review implementation -->
 
