@@ -6,7 +6,7 @@ CSCI 5117, Spring 2021, [assignment description](https://canvas.umn.edu/courses/
 
 * Team Name: Dr Video Games
 * App Name: Game Review
-* App Link: <https://TODO.heroku.com/>
+* App Link: <https://secret-sea-72576.herokuapp.com/>
 
 ### Students
 
