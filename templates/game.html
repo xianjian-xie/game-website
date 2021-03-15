@@ -55,11 +55,21 @@
     <div class="left-box-s">
     <h1>{{game[1]}}</h1>
     <div class="slideshow-container">
-
-      {% for picture in pictures %}
+      
 
       <div class="mySlides fade">
+        <iframe width="650" height="380" src={{game[2]}}>
+        </iframe>	
+
+      </div>
+
+      {% for picture in pictures %}
+      <div class="mySlides fade">
+        
+        
+
         <div class="numbertext">{{loop.index}} / {{pictures|length}}</div>
+        	
         <img src={{picture}} style="width:100%">
 
       </div>
