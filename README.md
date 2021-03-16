@@ -22,9 +22,10 @@ CSCI 5117, Spring 2021, [assignment description](https://canvas.umn.edu/courses/
 **Describe the most challenging features you implemented
 (one sentence per bullet, maximum 4 bullets):**
 
-* Rich Text Review Editor
-* Rich Text Game Wiki Editor
-* Recommender System
+* Searching engine using trie with autocomplete feature
+* Recommender according to popularity or rating
+* Rich Text Editor
+* video and photo gallery
 
 ## Testing Notes
 
