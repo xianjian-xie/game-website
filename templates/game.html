@@ -167,6 +167,28 @@
           <input id="dr" name="dr" value="{{review[0]}}"></input>
           <button id="delete_review" type="submit">Delete your review</button>
         </form>
+<!--EDIT REVIEW-->
+        <br>
+        <button id="myBtn">Edit your review</button>
+        <div id="myModal" class="modal">
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="comment-box">
+              <div class="review-content">
+                <img>{{review[5]|safe}}</img>
+              </div>
+              <form  action="{{ url_for("new_review", id=game[0]) }}" method="POST">
+                <input id="er" name="er" value="{{review[0]}}">
+
+                <div id="editor1"></div>
+                <input style="display:none;" type="text" id="description1" name="description1">
+                <button id="updateDescription1" type="submit" class="pure-button pure-button-primary">Update</button>
+              </form>
+            </div>
+          </div>
+
+        </div>
+
         {% endif %}
       </div><br>
 
@@ -244,6 +266,35 @@
 </div>
 
 
+<script>
+  // Get the modal
+  var modal = document.getElementById("myModal");
+  
+  // Get the button that opens the modal
+  var btn = document.getElementById("myBtn");
+  
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+  
+  // When the user clicks the button, open the modal 
+  btn.onclick = function() {
+    modal.style.display = "block";
+  }
+  
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function() {
+    modal.style.display = "none";
+  }
+  
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+  </script>
+
+
   <script>
   var div = document.getElementById('tag-box');
   var hiddeninput = document.getElementById('tag');
@@ -289,8 +340,106 @@
    </script>
   {% endif %}
 
+<!--
+  <script>
+    var toolbarOptions = [
+  ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+  ['blockquote', 'code-block'],
+  ['image'],
+  
+  [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+  [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+  [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+  [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+  [{ 'direction': 'rtl' }],                         // text direction
+  
+  [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+  [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+  
+  [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+  [{ 'font': [] }],
+  [{ 'align': [] }],
+  
+  ['clean']                                         // remove formatting button
+  ];
+  
+  
 
-<!-- for written box -->
+  var Editors = ['#description1', '#description'];
+  var quill;
+  for(var k=0; k<=Editors.length; k++)
+{
+quill = new Quill(Editors[k], {
+  modules: {
+  toolbar: toolbarOptions
+  },
+  theme: 'snow'
+  });
+  document.querySelector("#updateDescription").addEventListener("click", (e) => {
+  document.querySelector("#description").value = quill.root.innerHTML
+  });
+}
+  
+  </script>
+
+
+-->
+
+<script>
+  var toolbarOptions = [
+['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+['blockquote', 'code-block'],
+['image'],
+
+[{ 'header': 1 }, { 'header': 2 }],               // custom button values
+[{ 'list': 'ordered'}, { 'list': 'bullet' }],
+[{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+[{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+[{ 'direction': 'rtl' }],                         // text direction
+
+[{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+[{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+[{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+[{ 'font': [] }],
+[{ 'align': [] }],
+
+['clean']                                         // remove formatting button
+];
+
+var quill = new Quill('#editor', {
+modules: {
+toolbar: toolbarOptions
+},
+theme: 'snow'
+});
+document.querySelector("#updateDescription").addEventListener("click", (e) => {
+document.querySelector("#description").value = quill.root.innerHTML
+});
+
+
+
+
+var quill1 = new Quill('#editor1', {
+modules: {
+toolbar: toolbarOptions
+},
+theme: 'snow'
+});
+document.querySelector("#updateDescription1").addEventListener("click", (e) => {
+document.querySelector("#description1").value = quill1.root.innerHTML
+});
+
+
+
+</script>
+
+
+
+
+
+
+<!-- for written box 
 <script>
   var toolbarOptions = [
 ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
@@ -323,7 +472,7 @@ document.querySelector("#updateDescription").addEventListener("click", (e) => {
 document.querySelector("#description").value = quill.root.innerHTML
 });
 </script>
-
+-->
 
 <!-- script for slide show -->
   <script>

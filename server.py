@@ -217,14 +217,18 @@ def new_review(id):
     oauth_id = session['profile']['user_id']
 
     title = request.form.get("title")
+    description1 = request.form.get("description1")
     description = request.form.get("description")
     rating = request.form.get("rating")
     ts=time.time()
     timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+    
     with db.get_db_cursor(True) as cur:
 
         rid = request.form.get("dr")
-        app.logger.info(rid)
+        r2id = request.form.get("er")
+        app.logger.info(r2id)
+        app.logger.info(description1)
         if rid!=None and rid!="":
             #get necessary information before we delete review
             cur.execute("SELECT game_id, rating from review where id = %s",(rid,))
@@ -262,6 +266,8 @@ def new_review(id):
             reviewer_id=[record[0] for record in cur][0]
             cur.execute("INSERT INTO review (reviewer_id, game_id, timestamp, title, content, rating) VALUES (%s, %s, %s, %s, %s, %s);", (reviewer_id,id, timestamp, title, description,rating,))
 
+        if r2id!=None and r2id!="":
+            cur.execute("UPDATE review set content = %s where id = %s",(description1,r2id,))
 
 
         #update tag, tags is a string contains tag
